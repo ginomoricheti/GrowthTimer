@@ -25,8 +25,18 @@ def extract_highlighted_text(pdf_path):
 
 def save_to_word(highlighted_texts, output_path):
     doc = Document()
-    full_text = ' '.join(highlighted_texts)
-    doc.add_paragraph(full_text)
+
+    for text in highlighted_texts:
+        # Separate by point and period
+        blocks = text.split('. ')
+        for i, block in enumerate(blocks):
+            block = block.strip()
+            if block:
+                # Add the point again if not the last one
+                if not block.endswith('.'):
+                    block += '.'
+                doc.add_paragraph(block)
+
     doc.save(output_path)
     return output_path
 
@@ -36,7 +46,6 @@ def reformat_word_doc(input_path, output_path):
     document = Document(input_path)
     new_doc = Document()
 
-    # General Style
     style = new_doc.styles['Normal']
     font = style.font
     font.name = 'Calibri'

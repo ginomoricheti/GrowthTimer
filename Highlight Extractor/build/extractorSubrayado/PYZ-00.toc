@@ -1,5 +1,5 @@
-('C:\\Users\\ginom\\Desktop\\Programas utiles '
- 'propios\\build\\extractorSubrayado\\PYZ-00.pyz',
+('C:\\Users\\ginom\\Desktop\\My own apps\\Highlight '
+ 'Extractor\\build\\extractorSubrayado\\PYZ-00.pyz',
  [('__future__', 'C:\\Python313\\Lib\\__future__.py', 'PYMODULE'),
   ('_aix_support', 'C:\\Python313\\Lib\\_aix_support.py', 'PYMODULE'),
   ('_colorize', 'C:\\Python313\\Lib\\_colorize.py', 'PYMODULE'),
