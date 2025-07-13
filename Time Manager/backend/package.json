@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.6.2"
+  },
+  "scripts": {
+    "tauri": "tauri"
+  }
+}
