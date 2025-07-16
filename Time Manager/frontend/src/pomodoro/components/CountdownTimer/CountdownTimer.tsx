@@ -1,8 +1,10 @@
+import styles from './CountdownTimer.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretRight, faPause, faPlay, faPowerOff, faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import styles from './CountdownTimer.module.css'
-import { useRef, useState } from 'react';
+import { faCaretRight, faPause, faPlay, faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
+import { toast } from 'react-toastify';
+import usePomodoroTimer from '../../hooks/usePomodoroTimer';
 
 type Project = { name: string; code: string };
 type Goal = { name: string; code: string; projectCode: string };
@@ -30,100 +32,52 @@ const categories = [
 // TEMPORAL HASTA TENER BACKEND ---------------------------------------
 
 const CountdownTimer = () => {
+  const workTime = 5;
+  const breakTime = 5;
 
-  const countSecondsRef = useRef(0);
-  const isBreakRef = useRef(false);
-  const intervalRef = useRef<number | undefined>(undefined);
-
-  const workTime: number = 5;
-  const breakTime: number = 5;
-
-  const [timeLeft, setTimeLeft] = useState(workTime);
-  const [isBreak, setIsBreak] = useState(false);
-  const [activeButton, setActiveButton] = useState(false)
+  const {
+    timeLeft,
+    isBreak,
+    isActive,
+    start,
+    stop,
+    reset,
+    workedSeconds,
+  } = usePomodoroTimer({
+    workTime,
+    breakTime,
+    onModeChange: (breakMode) => {
+      document.documentElement.style.backgroundColor = breakMode ? '#4287f5' : '#53ae5e';
+    }
+  });
 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  
-  const runTimerCycle = (duration: number, breakMode: boolean) => {
-    setIsBreak(breakMode);
-    isBreakRef.current = breakMode;
-    document.documentElement.style.backgroundColor = breakMode ? '#4287f5' : '#53ae5e';
-
-    setTimeLeft(duration);
-    clearInterval(intervalRef.current);
-
-    intervalRef.current = window.setInterval(() => {
-      if (!isBreakRef.current) {
-        countSecondsRef.current += 1;  // <-- Incrementamos segundos de trabajo
-      }
-
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = undefined;
-
-          if (!breakMode) {
-            runTimerCycle(breakTime, true);
-          } else {
-            runTimerCycle(workTime, false);
-          }
-
-          return 0;
-        }
-
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const startTimer = () => {
-    if (intervalRef.current) return;
-    setActiveButton(true);
-    runTimerCycle(workTime, false);
-  };
-
-
-  const stopTimer = () => {
-    setActiveButton(false);
-    clearInterval(intervalRef.current);
-  };
-  
-  const resetTimer = () => {
-    stopTimer();
-    setTimeLeft(workTime);
-  };
 
   const endSession = () => {
-    const worked = countSecondsRef.current;
     if (
-      worked <= 0 ||
+      workedSeconds <= 0 ||
       selectedProject == null ||
       selectedGoal == null ||
       selectedCategory == null
     ) {
-      countSecondsRef.current = 0;
-      stopTimer();
-      setTimeLeft(workTime);
-
-      throw new Error("No está seleccionado todo lo que hace falta para terminar la sesión");
+      toast.error('Faltan campos por enviar');
+      reset();
+      throw new Error('No está seleccionado todo lo que hace falta para terminar la sesión');
     }
-
     console.log('Al backend voy a mandar:');
     console.log('Proyecto: ', selectedProject);
     console.log('Objetivo: ', selectedGoal);
     console.log('Categoria: ', selectedCategory);
-    console.log('Segundos trabajados: ', worked);
+    console.log('Segundos trabajados: ', workedSeconds);
 
-    countSecondsRef.current = 0;
-    stopTimer();
-    setTimeLeft(workTime);
+    reset();
   };
 
   const filteredGoals = selectedProject
-  ? goals.filter((g) => g.projectCode === selectedProject.code)
-  : [];
+    ? goals.filter((g) => g.projectCode === selectedProject.code)
+    : [];
 
   return (
     <>
@@ -139,75 +93,66 @@ const CountdownTimer = () => {
           placeholder="Projects"
           className={styles.dropdown}
         />
-        {
-          selectedProject && (
-            <>
-              <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow1}`}/>
-              <Dropdown
-                value={selectedGoal}
-                onChange={(e) => setSelectedGoal(e.value)}
-                options={filteredGoals}
-                optionLabel="name"
-                placeholder="Goals"
-                className={styles.dropdown}
-                disabled={!selectedProject}
-              />
-              {
-                selectedGoal && (
-                  <>
-                    <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow2}`} id='st'/>
-                    <Dropdown
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.value)}
-                      options={categories}
-                      optionLabel="name"
-                      placeholder="Categories"
-                      className={styles.dropdown}
-                    />
-                  </>
-                )
-              }
-            </>
-          )
-        }
-        
+        {selectedProject && (
+          <>
+            <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow1}`} />
+            <Dropdown
+              value={selectedGoal}
+              onChange={(e) => setSelectedGoal(e.value)}
+              options={filteredGoals}
+              optionLabel="name"
+              placeholder="Goals"
+              className={styles.dropdown}
+              disabled={!selectedProject}
+            />
+            {selectedGoal && (
+              <>
+                <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow2}`} id="st" />
+                <Dropdown
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.value)}
+                  options={categories}
+                  optionLabel="name"
+                  placeholder="Categories"
+                  className={styles.dropdown}
+                />
+              </>
+            )}
+          </>
+        )}
       </div>
+
       <div className={styles.timerBox}>
         <div className={styles.timerDisplay}>
-        <h1>POMODORO</h1>
-          <span>{String(Math.floor(timeLeft / 60)).padStart(2, "0")}</span>
+          <h1>POMODORO</h1>
+          <span>{String(Math.floor(timeLeft / 60)).padStart(2, '0')}</span>
           <span>:</span>
-          <span>{String(timeLeft % 60).padStart(2, "0")}</span>
+          <span>{String(timeLeft % 60).padStart(2, '0')}</span>
         </div>
         <div className={styles.timerButtons}>
           <button
-            className={`${activeButton ? styles.inactiveButton : styles.start}`}
-            onClick={startTimer}
-            disabled={activeButton}
+            className={`${isActive ? styles.inactiveButton : styles.start}`}
+            onClick={start}
+            disabled={isActive}
           >
             <FontAwesomeIcon icon={faPlay} />
           </button>
           <button
-            className={`${!activeButton ? styles.inactiveButton : styles.stop}`}
-            onClick={stopTimer}
+            className={`${!isActive ? styles.inactiveButton : styles.stop}`}
+            onClick={stop}
+            disabled={!isActive}
           >
             <FontAwesomeIcon icon={faPause} />
           </button>
-          <button
-            className={`${styles.reset}`}
-            onClick={resetTimer}
-          >
+          <button className={styles.reset} onClick={reset}>
             <FontAwesomeIcon icon={faRotateRight} />
           </button>
         </div>
       </div>
 
       <div className={styles.offButtonContainer}>
-        <button
-          className={styles.offButton}
-          onClick={endSession}
-        >
-          <FontAwesomeIcon icon={faPowerOff} />
+        <button className={styles.offButton} onClick={endSession}>
+          END SESSION
         </button>
       </div>
 
@@ -221,6 +166,6 @@ const CountdownTimer = () => {
       </div>
     </>
   );
-}
+};
 
 export default CountdownTimer;

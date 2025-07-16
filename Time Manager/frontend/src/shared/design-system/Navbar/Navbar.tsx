@@ -1,10 +1,15 @@
-import React from 'react'
+import styles from './Navbar.module.css'
+// import { useState } from "react"
 
-type Props = {}
+const Navbar = () => {
+  // const [isHidden, setIsHidden] = useState(false);
 
-const Navbar = (props: Props) => {
+
   return (
-    <div>Navbar</div>
+    <div className={styles.navbarContainer}>
+      <h3>Time Tracker</h3>
+
+    </div>
   )
 }
 

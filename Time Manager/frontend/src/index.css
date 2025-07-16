@@ -94,16 +94,16 @@ button:focus-visible {
 
 .p-dropdown-panel {
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: none;
   border-radius: 5px;
 }
 
 .p-dropdown-item {
   margin: 10px 0;
-  color: #1a1a1a;
+  color: #242424;
 }
 
 .p-dropdown-item:first-child {
