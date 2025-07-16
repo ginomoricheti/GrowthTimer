@@ -1,24 +1,107 @@
+.selectSection {
+  position: relative;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+}
+
+.dropdown {
+  position: relative;
+  min-width: 160px;
+  max-width: 160px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+
+  opacity: 0;
+  transform: translateX(50px);
+  animation: slideIn 0.4s forwards;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dropdown::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  width: 0%;
+  height: 3%;
+  background-color: #fff;
+}
+
+.dropdown:first-child::after {
+  left: 10px;
+}
+
+.dropdown:hover::after {
+  animation: growBar 0.4s forwards;
+}
+
+@keyframes growBar {
+  from {
+    width: 0;
+  }
+  to {
+    width: 65%;
+  }
+}
+
+.arrows {
+  opacity: 0;
+  transform: translateX(50px);
+  animation: slideIn 0.4s forwards;
+  display: flex;
+  align-items: center;
+}
+
+.arrow1 {
+  margin: 0 40px 0 -10px;
+}
+
+.arrow2 {
+  margin: 0 40px 0 40px;
+}
+
 .timerBox {
-  display: inline-block;
-  padding: 20px;
-  width: 600px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 0 20px 20px 20px;
+  margin: 0;
+  width: 100%;
   box-sizing: border-box;
 }
 
-.timerBox h1 {
-  font-family: "Lexend Deca", sans-serif;
-  font-size: 24px;
-  margin-top: 20px;
-}
-
 .timerDisplay {
+  padding: 20px;
   font-family: "Lexend Deca", sans-serif;
   font-size: 48px;
-  margin-top: 20px;
+  font-weight: 400;
+  margin-right: 20px;
+}
+
+.timerDisplay h1 {
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 36px;
+  margin-bottom: -1px;
 }
 
 .timerButtons {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .start,
@@ -26,10 +109,12 @@
 .reset {
   color: #fff;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  margin: 10px;
+  border-radius: 100px;
+  padding: 10px 10px;
+  margin: 5px;
+  font-size: 12px;
   cursor: pointer;
+  transition: all 250ms ease-in;
 }
 
 .start{
@@ -42,4 +127,52 @@
 
 .reset{
   background-color: #999999;
+}
+
+.inactiveButton {
+  border-radius: 100px;
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 12px;
+  background-color: transparent;
+  pointer-events: none;
+  transition: all 250ms ease-in;
+}
+
+.inactiveButton:hover {
+  background-color: transparent;
+  cursor: default;
+}
+
+.offButton {
+  position: fixed;
+  bottom: 50px;
+
+  width: 45px;
+  height: 45px;
+  padding: 10px 10px;
+  font-size: 16px;
+  color: #242424;
+  background: #f9f9f9;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 250ms ease-in;
+}
+
+.progressBarContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 6px;
+  background-color: transparent;
+  border-radius: 0;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #fff;
+  transition: width 1s linear;
 }

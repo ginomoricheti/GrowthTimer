@@ -1,56 +1,223 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight, faPause, faPlay, faPowerOff, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import styles from './CountdownTimer.module.css'
 import { useRef, useState } from 'react';
+import { Dropdown } from 'primereact/dropdown';
+
+type Project = { name: string; code: string };
+type Goal = { name: string; code: string; projectCode: string };
+type Category = { name: string; code: string };
+
+// TEMPORAL HASTA TENER BACKEND ---------------------------------------
+const projects = [
+  { name: 'React App', code: 'PR1' },
+  { name: 'Backend API', code: 'PR2' },
+  { name: 'Portafolio', code: 'PR3' }
+];
+
+const goals = [
+  { name: 'Terminar login', code: 'G1', projectCode: 'PR1' },
+  { name: 'Mejorar UI', code: 'G4', projectCode: 'PR1' },
+  { name: 'Integrar base de datos', code: 'G2', projectCode: 'PR2' },
+  { name: 'Deploy a Vercel', code: 'G3', projectCode: 'PR3' }
+];
+
+const categories = [
+  { name: 'Programación', code: 'C1' },
+  { name: 'Diseño', code: 'C2' },
+  { name: 'Documentación', code: 'C3' }
+];
+// TEMPORAL HASTA TENER BACKEND ---------------------------------------
 
 const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState(3000);
-  const intervalRef = useRef<number | null>(null);
 
-  const startTimer = () => {
-    intervalRef.current = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => {
-        if (prevTimeLeft <= 0) {
+  const countSecondsRef = useRef(0);
+  const isBreakRef = useRef(false);
+  const intervalRef = useRef<number | undefined>(undefined);
+
+  const workTime: number = 5;
+  const breakTime: number = 5;
+
+  const [timeLeft, setTimeLeft] = useState(workTime);
+  const [isBreak, setIsBreak] = useState(false);
+  const [activeButton, setActiveButton] = useState(false)
+
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  
+  const runTimerCycle = (duration: number, breakMode: boolean) => {
+    setIsBreak(breakMode);
+    isBreakRef.current = breakMode;
+    document.documentElement.style.backgroundColor = breakMode ? '#4287f5' : '#53ae5e';
+
+    setTimeLeft(duration);
+    clearInterval(intervalRef.current);
+
+    intervalRef.current = window.setInterval(() => {
+      if (!isBreakRef.current) {
+        countSecondsRef.current += 1;  // <-- Incrementamos segundos de trabajo
+      }
+
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
           clearInterval(intervalRef.current);
-          intervalRef.current = null
+          intervalRef.current = undefined;
+
+          if (!breakMode) {
+            runTimerCycle(breakTime, true);
+          } else {
+            runTimerCycle(workTime, false);
+          }
+
           return 0;
         }
-        return prevTimeLeft -1
+
+        return prev - 1;
       });
     }, 1000);
   };
 
-  const stopTimer = () => {
-    clearInterval(intervalRef.current);
+  const startTimer = () => {
+    if (intervalRef.current) return;
+    setActiveButton(true);
+    runTimerCycle(workTime, false);
   };
 
+
+  const stopTimer = () => {
+    setActiveButton(false);
+    clearInterval(intervalRef.current);
+  };
+  
   const resetTimer = () => {
     stopTimer();
-    setTimeLeft(3000);
+    setTimeLeft(workTime);
   };
+
+  const endSession = () => {
+    const worked = countSecondsRef.current;
+    if (
+      worked <= 0 ||
+      selectedProject == null ||
+      selectedGoal == null ||
+      selectedCategory == null
+    ) {
+      countSecondsRef.current = 0;
+      stopTimer();
+      setTimeLeft(workTime);
+
+      throw new Error("No está seleccionado todo lo que hace falta para terminar la sesión");
+    }
+
+    console.log('Al backend voy a mandar:');
+    console.log('Proyecto: ', selectedProject);
+    console.log('Objetivo: ', selectedGoal);
+    console.log('Categoria: ', selectedCategory);
+    console.log('Segundos trabajados: ', worked);
+
+    countSecondsRef.current = 0;
+    stopTimer();
+    setTimeLeft(workTime);
+  };
+
+  const filteredGoals = selectedProject
+  ? goals.filter((g) => g.projectCode === selectedProject.code)
+  : [];
 
   return (
     <>
+      <div className={styles.selectSection}>
+        <Dropdown
+          value={selectedProject}
+          onChange={(e) => {
+            setSelectedProject(e.value);
+            setSelectedGoal(null);
+          }}
+          options={projects}
+          optionLabel="name"
+          placeholder="Projects"
+          className={styles.dropdown}
+        />
+        {
+          selectedProject && (
+            <>
+              <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow1}`}/>
+              <Dropdown
+                value={selectedGoal}
+                onChange={(e) => setSelectedGoal(e.value)}
+                options={filteredGoals}
+                optionLabel="name"
+                placeholder="Goals"
+                className={styles.dropdown}
+                disabled={!selectedProject}
+              />
+              {
+                selectedGoal && (
+                  <>
+                    <FontAwesomeIcon icon={faCaretRight} className={`${styles.arrows} ${styles.arrow2}`} id='st'/>
+                    <Dropdown
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.value)}
+                      options={categories}
+                      optionLabel="name"
+                      placeholder="Categories"
+                      className={styles.dropdown}
+                    />
+                  </>
+                )
+              }
+            </>
+          )
+        }
+        
+      </div>
       <div className={styles.timerBox}>
-        <h1>POMODORO TIMER</h1>
-
         <div className={styles.timerDisplay}>
+        <h1>POMODORO</h1>
           <span>{String(Math.floor(timeLeft / 60)).padStart(2, "0")}</span>
           <span>:</span>
           <span>{String(timeLeft % 60).padStart(2, "0")}</span>
         </div>
         <div className={styles.timerButtons}>
           <button
-            className={styles.start}
+            className={`${activeButton ? styles.inactiveButton : styles.start}`}
             onClick={startTimer}
-          >START</button>
+            disabled={activeButton}
+          >
+            <FontAwesomeIcon icon={faPlay} />
+          </button>
           <button
-            className={styles.stop}
+            className={`${!activeButton ? styles.inactiveButton : styles.stop}`}
             onClick={stopTimer}
-            >STOP</button>
+          >
+            <FontAwesomeIcon icon={faPause} />
+          </button>
           <button
-            className={styles.reset}
+            className={`${styles.reset}`}
             onClick={resetTimer}
-          >RESET</button>
+          >
+            <FontAwesomeIcon icon={faRotateRight} />
+          </button>
         </div>
+      </div>
+
+      <div className={styles.offButtonContainer}>
+        <button
+          className={styles.offButton}
+          onClick={endSession}
+        >
+          <FontAwesomeIcon icon={faPowerOff} />
+        </button>
+      </div>
+
+      <div className={styles.progressBarContainer}>
+        <div
+          className={styles.progressBar}
+          style={{
+            width: `${(timeLeft / (isBreak ? breakTime : workTime)) * 100}%`
+          }}
+        />
       </div>
     </>
   );

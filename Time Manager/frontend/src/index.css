@@ -32,6 +32,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  transition: background-color 0.5s ease;
   overflow: hidden;
 }
 
@@ -48,6 +49,8 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -87,4 +90,30 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.p-dropdown-panel {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  border-radius: 5px;
+}
+
+.p-dropdown-item {
+  margin: 10px 0;
+  color: #1a1a1a;
+}
+
+.p-dropdown-item:first-child {
+  margin-top: 0;
+}
+
+.p-dropdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.p-dropdown-trigger {
+  display: none;
 }
