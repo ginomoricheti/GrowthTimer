@@ -86,6 +86,7 @@
 
 .timerDisplay {
   padding: 20px;
+  margin-left: 77px;
   font-family: "Lexend Deca", sans-serif;
   font-size: 48px;
   font-weight: 400;
@@ -148,13 +149,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  background-color: #d90f26;
 }
 
 .offButton {
   position: fixed;
-  bottom: 50px;
-  width: fit-content;
+  bottom: 100px;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: 600;
