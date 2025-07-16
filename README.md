@@ -109,9 +109,7 @@ If you find any bugs, please open an [issue](https://github.com/yourusername/gro
 
 ## Contact
 
-Gino Morichetti - [@yourtwitter](https://twitter.com/yourtwitter) - your.email@example.com
-
-Project Link: [https://github.com/yourusername/growthtimer](https://github.com/yourusername/growthtimer)
+Gino Morichetti - [@ginomorichetti](https://twitter.com/ginomorichetti) - ginomorichetti@gmail.com
 
 ## Acknowledgments
 
