@@ -1,7 +1,12 @@
-#orderHeatMap {
+/* .hoverHistoryZone {
+  position: absolute;
+  background-color: rgba(255, 0, 0, 0.5);
+} */
+
+#orderHeatMapBox {
   position: absolute;
   left: 50%;
-  bottom: -9%;
+  bottom: -8%;
   transform: translateX(-50%);
   background-color: #3c3c3c;
   padding: 0;
@@ -9,18 +14,17 @@
   font-family: "Montserrat", sans-serif;
   user-select: none;
   color: #eee;
-  width: fit-content;
   opacity: 0;
   transition: all 0.3s ease;
   z-index: 101;
 }
 
-#orderHeatMap text.day {
+#orderHeatMapBox text.day {
   fill: #f0f0f0;
   font-weight: 600;
 }
 
-#orderHeatMap rect {
+#orderHeatMapBox rect {
   stroke: gray;
   stroke-width: 0.05px;
   cursor: pointer;
@@ -39,12 +43,12 @@
   transition: opacity 0.2s ease;
 }
 
-#orderHeatMap rect:hover {
+#orderHeatMapBox rect:hover {
   stroke: #fff;
   stroke-width: 2px;
 }
 
-#orderHeatMap g > text {
+#orderHeatMapBox g > text {
   fill: #ddd;
   font-size: 10px;
 }
@@ -60,7 +64,7 @@
 
 }
 
-#orderHeatMap.visible {
+#orderHeatMapBox.visible {
   opacity: 1;
   bottom: 2.5%;
   pointer-events: auto;
