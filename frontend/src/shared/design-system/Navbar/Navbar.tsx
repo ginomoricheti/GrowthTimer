@@ -32,8 +32,6 @@ const Navbar = () => {
 
       <Link to='/' className={styles.navItem} >Pomodoro</Link>
       <Link to='/projects' className={styles.navItem} >Projects</Link>
-      <Link to='/history' className={styles.navItem} >History</Link>
-
       </div>
     </>
   );

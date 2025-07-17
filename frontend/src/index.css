@@ -1,3 +1,4 @@
+@import "tailwindcss";
 
 /* 
 <weight>: Use a value from 100 to 900
@@ -17,9 +18,16 @@
   font-style: normal;
 } */
 
+/* .montserrat-<uniquifier> {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal; 
+} */
+
 :root {
 
-  font-family: "Lexend Deca", sans-serif;
+  font-family: "Montserrat", sans-serif;
   line-height: 1.5;
   font-weight: 300;
 
