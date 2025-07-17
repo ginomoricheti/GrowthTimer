@@ -2,6 +2,7 @@ import './HeatMap.css'
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { PomodoroRecord } from '@/shared/types';
+import React from 'react';
 
 const HeatMap = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -180,4 +181,4 @@ const HeatMap = () => {
   );
 };
 
-export default HeatMap;
+export default React.memo(HeatMap);
