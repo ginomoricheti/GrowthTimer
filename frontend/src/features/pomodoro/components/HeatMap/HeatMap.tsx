@@ -363,36 +363,21 @@ const HeatMap = () => {
           }}
         />
         
-        {/* Enhanced tooltip */}
+        {/* Tooltip
         {tooltip.visible && (
           <div
-            style={{
-              position: 'fixed',
-              left: tooltip.x + 15,
-              top: tooltip.y - 10,
-              background: '#2a2a2a',
-              color: '#ffffff',
-              padding: '12px 16px',
-              borderRadius: '8px',
-              fontSize: '12px',
-              pointerEvents: 'none',
-              zIndex: 1000,
-              whiteSpace: 'pre-line',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.8)',
-              border: '1px solid #444444',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif'
-            }}
+            className='.custom-tooltip'
           >
             {tooltip.content}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Informational modal */}
       {modal.visible && modal.data && (
         <div
           style={{
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
@@ -470,7 +455,7 @@ const HeatMap = () => {
               }}>
                 <h3 style={{ 
                   margin: '0 0 8px 0', 
-                  color: '#52b788',
+                  color: '#53ae5e',
                   fontSize: '16px'
                 }}>
                   {formatDate(modal.data.date)}
@@ -491,17 +476,10 @@ const HeatMap = () => {
                     alignItems: 'center', 
                     marginBottom: '12px'
                   }}>
-                    <div style={{ 
-                      width: '16px',
-                      height: '16px',
-                      backgroundColor: getColor(modal.data.minutes),
-                      borderRadius: '4px',
-                      marginRight: '12px'
-                    }}></div>
                     <span style={{ 
                       fontSize: '18px',
                       fontWeight: 'bold',
-                      color: '#74c69d'
+                      color: '#53ae5e'
                     }}>
                       {formatTime(modal.data.minutes)}
                     </span>

@@ -121,7 +121,11 @@ const CountdownTimer = () => {
             <FontAwesomeIcon icon={faRotateRight} />
           </button>
         </div>
-        <button className={styles.offButton} onClick={() => setIsPopupOpen(true)}>
+        <button className={styles.offButton} onClick={() => {
+          stop();
+          setIsPopupOpen(true);
+        } 
+        }>
           END SESSION
         </button>
         <EndSessionPopup

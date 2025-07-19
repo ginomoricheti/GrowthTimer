@@ -1,0 +1,52 @@
+.viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider {
+  display: flex;
+  width: 200vw;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f1f1f1;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.navButton {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+  font-size: 1rem;
+  background: none;
+  color: #f9f9f9;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.navButton:hover {
+  font-size: 1.2rem;
+}
+
+.rightButton {
+  right: 0;
+}
+
+.leftButton {
+  left: 0;
+}
