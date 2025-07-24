@@ -1,0 +1,45 @@
+.slider {
+  position: relative;
+  max-width: 1300px;
+  width: 100%;
+}
+
+.slidesContainer {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.slideButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.slideButtonPrev {
+  left: -12px;
+}
+
+.slideButtonNext {
+  right: -12px;
+}
+
+@media screen and (max-width: 768px) {
+  .slideButtonPrev {
+    left: 0;
+  }
+
+  .slideButtonNext {
+    right: 0;
+  } 
+}

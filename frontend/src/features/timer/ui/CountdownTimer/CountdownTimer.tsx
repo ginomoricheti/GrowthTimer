@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import usePomodoroTimer from '../../hooks/usePomodoroTimer';
 import EndSessionPopup from '../EndSessionPopup/EndSessionPopup';
 import { Category, Goal, Project } from '@/shared/types';
-import HeatMap from '../HeatMap/HeatMap';
+import HeatMap from '../../../history/ui/HeatMap/HeatMap';
 
 // --------------------- TEMPORAL HASTA TENER BACKEND --------------------------
 const exampleProjects: (Project & { goals: Goal[] })[] = [

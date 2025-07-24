@@ -1,7 +1,8 @@
+import { Task } from "./TaskTypes";
 
 export interface PomodoroRecord {
   date: Date | string;
   minutes: number;
   project: string;
-  task: string;
+  task: Task;
 }

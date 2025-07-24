@@ -1,0 +1,12 @@
+.graphsSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.secondaryGraphsSection {
+  display: flex;
+  flex-direction: column;
+  min-width: 20%;
+  gap: 10px;
+}

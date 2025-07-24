@@ -1,7 +1,7 @@
 import './App.css'
 import { PrimeReactProvider } from 'primereact/api';
 import { ToastContainer } from 'react-toastify';
-import PomodoroPage from '../features/pomodoro/PomodoroPage';
+import PomodoroPage from './pages/PomodoroPage';
 
 function App() {
 

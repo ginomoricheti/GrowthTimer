@@ -13,6 +13,7 @@
 }
 
 .page {
+  position: relative;
   width: 100vw;
   height: 100vh;
   flex-shrink: 0;
@@ -49,4 +50,32 @@
 
 .leftButton {
   left: 0;
+}
+
+.projectsSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 99vw;
+  min-height: 135px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* scrollbar-gutter: stable both-edges; */
+}
+
+.chartsSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100%;
+  padding: 0 15px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  border-radius: 16px;
 }

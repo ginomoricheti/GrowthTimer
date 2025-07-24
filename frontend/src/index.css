@@ -125,3 +125,23 @@ button:focus-visible {
 .p-dropdown-trigger {
   display: none;
 }
+
+::-webkit-scrollbar {
+  height: 4px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: #242424;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
