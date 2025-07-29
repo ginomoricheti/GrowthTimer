@@ -5,47 +5,71 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import usePomodoroTimer from '../../hooks/usePomodoroTimer';
 import EndSessionPopup from '../EndSessionPopup/EndSessionPopup';
-import { Category, Goal, Project } from '@/shared/types';
+import { Category, Goal, PomodoroRecord, ProjectGet, Task } from '@/shared/types';
 import HeatMap from '../../../history/ui/HeatMap/HeatMap';
 
-// --------------------- TEMPORAL HASTA TENER BACKEND --------------------------
-const exampleProjects: (Project & { goals: Goal[] })[] = [
+// ------------------------- TEMPORAL -------------------------
+const exampleCategories: Category[] = [
+  { id: 1, name: "Estudio", color: "#FF5733" },
+  { id: 2, name: "Trabajo", color: "#33C1FF" },
+];
+
+const exampleTasks: Task[] = [
+  { id: 1, name: "Leer", color: "#AAFFAA" },
+  { id: 2, name: "Programar", color: "#FFAAFF" },
+];
+
+const exampleGoals: Goal[] = [
+  { id: 1, name: "Completar curso de TypeScript", projectCode: 101 },
+  { id: 2, name: "Desarrollar app Pomodoro", projectCode: 101 },
+];
+
+const examplePomodoroRecords: PomodoroRecord[] = [
   {
-    name: 'Fullstack App',
-    code: 'proj-001',
-    goals: [
-      { name: 'Frontend con React', code: 'goal-001', projectCode: 'proj-001' },
-      { name: 'Backend con Express', code: 'goal-002', projectCode: 'proj-001' },
-    ],
+    date: "2025-07-25",
+    minutes: 25,
+    project: "Estudio Pomodoro",
+    task: exampleTasks[0],
   },
   {
-    name: 'Estudio de inglés',
-    code: 'proj-002',
-    goals: [
-      { name: 'Vocabulario', code: 'goal-003', projectCode: 'proj-002' },
-      { name: 'Listening', code: 'goal-004', projectCode: 'proj-002' },
-      { name: 'Speaking', code: 'goal-005', projectCode: 'proj-002' },
-    ],
-  },
-  {
-    name: 'Organización Personal',
-    code: 'proj-003',
-    goals: [
-      { name: 'Planificación semanal', code: 'goal-006', projectCode: 'proj-003' },
-      { name: 'Revisión mensual', code: 'goal-007', projectCode: 'proj-003' },
-    ],
+    date: "2025-07-26",
+    minutes: 50,
+    project: "Estudio Pomodoro",
+    task: exampleTasks[1],
   },
 ];
 
-const exampleCategories: Category[] = [
-  { code: 'estudiar', name: 'Estudiar' },
-  { code: 'codear', name: 'Codear' },
-  { code: 'planificar', name: 'Planificar' },
-  { code: 'idear', name: 'Idear' },
-  { code: 'arreglar', name: 'Arreglar' },
-  { code: 'controlar', name: 'Controlar' },
+const exampleProjects: ProjectGet[] = [
+  {
+    id: 101,
+    name: "Estudio Pomodoro",
+    category: exampleCategories[0],
+    goals: exampleGoals,
+    pomodoroRecords: examplePomodoroRecords,
+    totalTimeMinutes: 75,
+    createdAt: "2025-07-01T10:00:00Z",
+    updatedAt: "2025-07-20T12:00:00Z",
+    color: "#FF5733",
+  },
+  {
+    id: 102,
+    name: "Trabajo Freelance",
+    category: exampleCategories[1],
+    goals: [],
+    pomodoroRecords: [],
+    totalTimeMinutes: 0,
+    createdAt: "2025-07-10T08:00:00Z",
+    updatedAt: "2025-07-20T12:00:00Z",
+    color: "#33C1FF",
+  },
 ];
-// --------------------- TEMPORAL HASTA TENER BACKEND -------------------------
+// ------------------------- TEMPORAL -------------------------
+const categories: Category[] = Array.from(
+  new Map(
+    exampleProjects.map((p) => [p.category.id, p.category]) // clave única por ID
+  ).values()
+);
+
 
 const CountdownTimer = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -131,16 +155,19 @@ const CountdownTimer = () => {
         <EndSessionPopup
           isOpen={isPopupOpen}
           onClose={() => setIsPopupOpen(false)}
-          onConfirm={({ project, goal, category }) => {
+          onConfirm={({ project, goal, task }) => {
             if (workedSeconds <= 0) {
               toast.error('No hubo tiempo trabajado');
               reset();
               return;
             }
 
+            const category = project.category;
+
             console.log('Al backend voy a mandar:');
             console.log('Proyecto: ', project);
             console.log('Objetivo: ', goal);
+            console.log('Tarea: ', task);
             console.log('Categoria: ', category);
             console.log('Segundos trabajados: ', workedSeconds);
             
@@ -151,9 +178,9 @@ const CountdownTimer = () => {
           }}
           projects={exampleProjects.map(p => ({
             ...p,
-            goals: p.goals?.filter(g => g.projectCode === p.code)
+            goals: p.goals?.filter(g => g.projectCode === p.id)
           }))}
-          categories={exampleCategories}
+          categories={categories}
         />
       </div>
       <h4 className={styles.currentTimeDetails}>You've been worked for <span>{formattedWorkedTime}</span></h4>

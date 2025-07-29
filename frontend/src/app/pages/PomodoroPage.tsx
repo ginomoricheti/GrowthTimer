@@ -3,38 +3,71 @@ import CountdownTimer from "../../features/timer/ui/CountdownTimer/CountdownTime
 import styles from "./PomodoroPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
-import { ProjectGet } from "@/shared/types";
+import { Category, Goal, PomodoroRecord, ProjectGet, Task } from "@/shared/types";
 import Slider from "@/features/slider/ui/Slider/Slider";
 import Card from "@/features/slider/ui/Card/Card";
 import { Graphs } from "@/features/graphs/Graphs";
 
-const exampleData: ProjectGet = {
-  name: "uhsduhfds",
-  code: "udhf",
-  goals: [
-    {
-      name: "uhsduhfds",
-      code: "udhf",
-      projectCode: "e1",
-    }
-  ],
-  pomodoroRecords: [
-    {
-      date: new Date(),
-      minutes: 300,
-      project: "Proyecto ejemplo",
-      task: {
-        id: 1,
-        name: "Estudiar",
-      },
-    }
-  ],
-  totalTimeMinutes: 300,
-}
+// ------------------------- TEMPORAL -------------------------
+const exampleCategories: Category[] = [
+  { id: 1, name: "Estudio", color: "#FF5733" },
+  { id: 2, name: "Trabajo", color: "#33C1FF" },
+];
+
+const exampleTasks: Task[] = [
+  { id: 1, name: "Leer", color: "#AAFFAA" },
+  { id: 2, name: "Programar", color: "#FFAAFF" },
+];
+
+const exampleGoals: Goal[] = [
+  { id: 1, name: "Completar curso de TypeScript", projectCode: 101 },
+  { id: 2, name: "Desarrollar app Pomodoro", projectCode: 101 },
+];
+
+const examplePomodoroRecords: PomodoroRecord[] = [
+  {
+    date: "2025-07-25",
+    minutes: 25,
+    project: "Estudio Pomodoro",
+    task: exampleTasks[0],
+  },
+  {
+    date: "2025-07-26",
+    minutes: 50,
+    project: "Estudio Pomodoro",
+    task: exampleTasks[1],
+  },
+];
+
+const exampleProjects: ProjectGet[] = [
+  {
+    id: 101,
+    name: "Estudio Pomodoro",
+    category: exampleCategories[0],
+    goals: exampleGoals,
+    pomodoroRecords: examplePomodoroRecords,
+    totalTimeMinutes: 75,
+    createdAt: "2025-07-01T10:00:00Z",
+    updatedAt: "2025-07-20T12:00:00Z",
+    color: "#FF5733",
+  },
+  {
+    id: 102,
+    name: "Trabajo Freelance",
+    category: exampleCategories[1],
+    goals: [],
+    pomodoroRecords: [],
+    totalTimeMinutes: 0,
+    createdAt: "2025-07-10T08:00:00Z",
+    updatedAt: "2025-07-20T12:00:00Z",
+    color: "#33C1FF",
+  },
+];
+// ------------------------- TEMPORAL -------------------------
+
 
 const PomodoroPage = () => {
   const [showSecondPage, setShowSecondPage] = useState(false);
-  const sliderItems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   return (
     <div className={styles.viewport}>
@@ -55,15 +88,15 @@ const PomodoroPage = () => {
         {/* Second view (Resume) */}
         <div className={styles.page}>
           <div className={styles.projectsSection}>
-            {sliderItems.map((index) => (
-              <div className={styles.item} key={index}><Card data={exampleData} /></div>
+            {exampleProjects.map((el) => (
+              <div className={styles.item} key={el.id}><Card data={el} /></div>
             ))}
           </div>
           <div className={styles.chartsSection}>
             <Slider
               slidesPerView={1}
               slidesPerGroup={1}
-              spaceBetween={8}
+              spaceBetween={0}
               autoPlay={false}
               autoPlayInterval={2000}
               loop={true}
@@ -84,7 +117,9 @@ const PomodoroPage = () => {
                 }
               }}
             >
-              <Graphs data={exampleData}/>
+              {exampleProjects.map((item) => 
+                <Graphs data={item}/>
+              )}
             </Slider>
           </div>
           <button onClick={() => setShowSecondPage(false)} className={`${styles.navButton} ${styles.leftButton}`}>

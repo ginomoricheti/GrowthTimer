@@ -1,5 +1,5 @@
 export interface Goal {
   name: string;
-  code: string;
-  projectCode: string;
+  id: number;
+  projectCode: number;
 }

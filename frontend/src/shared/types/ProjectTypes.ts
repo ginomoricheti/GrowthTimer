@@ -4,8 +4,8 @@ import { PomodoroRecord } from "./PomodoroTypes";
 
 export interface ProjectGet {
   name: string;
-  code: string;
-  category?: Category,
+  id: number;
+  category: Category,
   goals?: Goal[];
   pomodoroRecords: PomodoroRecord[];
   totalTimeMinutes: number;

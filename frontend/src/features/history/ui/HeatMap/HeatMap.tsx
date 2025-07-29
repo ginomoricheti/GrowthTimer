@@ -33,19 +33,58 @@ const HeatMap = () => {
 
   // Heatmap data
   const dataset: PomodoroRecord[] = [
-    { date: "2025-01-15", minutes: 100, project: "English", task: "Listening" },
-    { date: "2025-02-16", minutes: 400, project: "English", task: "Listening" },
-    { date: "2025-03-17", minutes: 300, project: "English", task: "Listening" },
-    { date: "2025-04-14", minutes: 350, project: "English", task: "Listening" },
-    { date: "2025-05-13", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-06-13", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-07-13", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-08-15", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-09-17", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-10-03", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-11-01", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-12-01", minutes: 270, project: "English", task: "Listening" },
-    { date: "2025-01-30", minutes: 270, project: "English", task: "Listening" },
+    { date: "2025-01-15", minutes: 100, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-02-16", minutes: 400, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-03-17", minutes: 300, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-04-14", minutes: 350, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-05-13", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-06-13", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-07-13", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-08-15", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-09-17", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-10-03", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-11-01", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-12-01", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
+    { date: "2025-01-30", minutes: 270, project: "English", task: {
+      name: "Prueba",
+      id: 1
+    } },
   ];
 
   // Heatmap Config - Reduced height
@@ -120,7 +159,7 @@ const HeatMap = () => {
           date: dateStr,
           minutes: entry?.minutes ?? 0,
           project: entry?.project ?? "-",
-          task: entry?.task ?? "-",
+          task: entry?.task ?? undefined,
           x,
           y
         });
@@ -495,7 +534,7 @@ const HeatMap = () => {
                   <div style={{ marginBottom: '12px' }}>
                     <strong style={{ color: '#ffffff' }}>Task Category:</strong>
                     <span style={{ marginLeft: '8px', color: '#888888' }}>
-                      {modal.data.task}
+                      {modal.data.task?.name}
                     </span>
                   </div>
 

@@ -1,6 +1,6 @@
 .slider {
   position: relative;
-  max-width: 1300px;
+  max-width: 100vw;
   width: 100%;
 }
 
@@ -42,4 +42,8 @@
   .slideButtonNext {
     right: 0;
   } 
+}
+
+.sliderItem {
+  width: 100vw;
 }

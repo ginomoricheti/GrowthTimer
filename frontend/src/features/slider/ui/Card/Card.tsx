@@ -1,8 +1,8 @@
-import { Category, Goal, Project } from "@/shared/types";
+import { ProjectGet } from "@/shared/types";
 import styles from './Card.module.css';
 
 type CardProps = {
-  data: Project | Goal | Category | null;
+  data: ProjectGet;
 };
 
 const Card = ({ data }: CardProps) => {
@@ -13,7 +13,7 @@ const Card = ({ data }: CardProps) => {
       <h3>{data.name}</h3>
       <div className={styles.details}>
         <p><span>Type:</span> Project</p>
-        <p><span>Code:</span> {data.code}</p>
+        <p><span>ID:</span> {data.id}</p>
       </div>
     </div>
   );
