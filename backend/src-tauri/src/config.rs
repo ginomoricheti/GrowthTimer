@@ -1,20 +1,18 @@
-use directories::ProjectDirs;
+use std::path::PathBuf;
 use std::fs;
 
-pub struct Config {
-    pub db_url: String,
-}
+pub fn get_db_path() -> PathBuf {
+    let base_dir = std::env::current_dir().expect("No se pudo obtener el directorio actual");
 
-impl Config {
-    pub fn new() -> Self {
-        let proj_dirs = ProjectDirs::from("com", "TuOrg", "TuApp")
-            .expect("No se pudo obtener directorios de aplicación");
-        let db_dir = proj_dirs.data_dir();
-        fs::create_dir_all(db_dir).expect("No se pudo crear carpeta de datos");
+    let data_dir = if base_dir.ends_with("src-tauri") {
+        base_dir.join("data")
+    } else {
+        base_dir.join("src-tauri").join("data")
+    };
 
-        let db_path = db_dir.join("growth_timer.db");
-        let db_url = format!("sqlite://{}", db_path.display());
-
-        Self { db_url }
+    if !data_dir.exists() {
+        fs::create_dir_all(&data_dir).expect("No se pudo crear el directorio data");
     }
+
+    data_dir.join("database.db")
 }

@@ -1,6 +1,10 @@
-use sqlx::{SqlitePool, Result};
+use r2d2_sqlite::SqliteConnectionManager;
+use r2d2::Pool;
+use std::error::Error;
 
-pub async fn create_triggers(pool: &SqlitePool) -> Result<()> {
+pub fn create_triggers(pool: &Pool<SqliteConnectionManager>) -> Result<(), Box<dyn Error>> {
+    let conn = pool.get()?;
+
     let qry = r#"
     CREATE TRIGGER IF NOT EXISTS after_insert_pomodoro
     AFTER INSERT ON pomodoros
@@ -147,6 +151,6 @@ pub async fn create_triggers(pool: &SqlitePool) -> Result<()> {
     END;
     "#;
 
-    sqlx::query(qry).execute(pool).await?;
+    conn.execute_batch(qry)?;
     Ok(())
 }

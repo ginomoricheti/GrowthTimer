@@ -1,59 +1,57 @@
-use sqlx::{sqlite::SqliteQueryResult, SqlitePool};
+use r2d2_sqlite::SqliteConnectionManager;
+use r2d2::Pool;
+use std::error::Error;
 
-pub async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Error> {
-    let pool = SqlitePool::connect(db_url).await?;
+pub fn create_schema(pool: &Pool<SqliteConnectionManager>) -> Result<(), Box<dyn Error>> {
+    let conn = pool.get()?;
+    
     let qry = r#"
         -- ============================================
         -- Database setup for Growth Timer
         -- ============================================
 
-        -- Categories table (with default values)
         CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(255) NOT NULL,
             total_time_minutes INTEGER DEFAULT 0,
-            color VARCHAR(7) NOT NULL, -- Color obligatorio
+            color VARCHAR(7) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
-        -- Projects table
         CREATE TABLE IF NOT EXISTS projects (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(255) NOT NULL,
-            id_category INTEGER NOT NULL, -- Obligatorio, siempre tiene categoría
-            color VARCHAR(7), -- Color específico del proyecto (opcional)
+            id_category INTEGER NOT NULL,
+            color VARCHAR(7),
             total_time_minutes INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (id_category) REFERENCES categories(id)
         );
 
-        -- Goals table
         CREATE TABLE IF NOT EXISTS goals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(255) NOT NULL,
-            id_project INTEGER NOT NULL, -- Referencia al ID del proyecto
+            id_project INTEGER NOT NULL,
             total_time_minutes INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (id_project) REFERENCES projects(id)
         );
 
-        -- Tasks table (with default values)
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(255) NOT NULL,
             total_time_minutes INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-
-        -- Pomodoros table
+            );
+            
         CREATE TABLE IF NOT EXISTS pomodoros (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date DATETIME DEFAULT CURRENT_TIMESTAMP,
             minutes INTEGER DEFAULT 25,
             id_project INTEGER NOT NULL,
             id_goal INTEGER,
             id_task INTEGER NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (id_project) REFERENCES projects(id),
             FOREIGN KEY (id_goal) REFERENCES goals(id),
             FOREIGN KEY (id_task) REFERENCES tasks(id)
@@ -63,7 +61,6 @@ pub async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Erro
         -- DATOS PREDEFINIDOS
         -- ============================================
 
-        -- Default Categories
         INSERT OR IGNORE INTO categories (id, name, color) VALUES 
             (1, 'Personal', '#10B981'),
             (2, 'Trabajo', '#3B82F6'),
@@ -76,7 +73,6 @@ pub async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Erro
             (9, 'Fitness', '#F97316'),
             (10, 'Hobbies', '#6366F1');
 
-        -- Default Tasks
         INSERT OR IGNORE INTO tasks (id, name) VALUES 
             (1, 'Leer'),
             (2, 'Estudiar'),
@@ -94,6 +90,6 @@ pub async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Erro
             (14, 'Organizar');
     "#;
 
-    let result = sqlx::query(qry).execute(&pool).await?;
-    Ok(result)
+    conn.execute_batch(qry)?;
+    Ok(())
 }

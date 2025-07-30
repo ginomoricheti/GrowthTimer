@@ -1,43 +1,76 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod config;
 mod db;
+mod commands;
+mod services;
+mod models;
 
-use db::{Database, get_db_path};
-use crate::db::commands::{insert_test_user, list_users};
+use config::get_db_path;
+use db::Database;
+use commands::commands::{
+    list_categories,
+    list_tasks,
+    list_projects_complete,
+    get_project_by_id,
+    insert_test_data,
+    create_category,
+    create_project,
+    create_goal,
+    create_task,
+    create_pomodoro,
+};
+use db::schema::create_schema;
+use db::triggers::create_triggers;
 use tauri::Manager;
+use std::sync::Arc;
 
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            println!("🚀 Iniciando aplicación...");
+            println!("Running app...");
 
-            // 1. Preparar la ruta de la base de datos
+            // 1. Ruta de la base de datos
             let db_path = get_db_path();
-            println!("📍 Ruta de la base de datos: {}", db_path.display());
+            println!("DB Route: {}", db_path.display());
 
-            // 2. Conectar a la base de datos
+            // 2. Conectar base de datos
             let db_path_str = db_path.to_string_lossy();
-            let database = Database::new(&db_path_str)
-                .unwrap_or_else(|e| {
-                    eprintln!("❌ Error al conectar con la base de datos: {}", e);
-                    Database::new_in_memory().expect("No se pudo ni en memoria")
-                });
+            let database = Arc::new(
+                Database::new(&db_path_str).unwrap_or_else(|e| {
+                    eprintln!("Error connecting to the database: {}", e);
+                    Database::new_in_memory().expect("It couldn't even be done in memory.")
+                })
+            );
 
-            // 3. Inicializar tablas
-            if let Err(e) = database.initialize_tables() {
-                eprintln!("❌ Error al inicializar tablas: {}", e);
+            // 3. Crear esquema y datos iniciales
+            if let Err(e) = create_schema(&database.get_pool()) {
+                eprintln!("Error creating schema: {}", e);
                 std::process::exit(1);
             }
 
-            // 4. Guardar la conexión para usarla desde comandos
+            if let Err(e) = create_triggers(&database.get_pool()) {
+                eprintln!("Error creating triggers: {}", e);
+                std::process::exit(1);
+            }
+
+            // 4. Guardar la conexión en el estado de Tauri
             app.manage(database);
 
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            insert_test_user,
-            list_users
+            list_categories,
+            list_tasks,
+            list_projects_complete,
+            get_project_by_id,
+            insert_test_data,
+            create_category,
+            create_project,
+            create_goal,
+            create_task,
+            create_pomodoro,
         ])
         .run(tauri::generate_context!())
-        .expect("Error al ejecutar la app");
+        .expect("Error running the app");
 }
