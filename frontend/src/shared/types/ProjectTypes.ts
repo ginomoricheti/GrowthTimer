@@ -1,15 +1,14 @@
-import { Category } from "./CategoryTypes";
-import type { Goal } from "./GoalTypes";
-import { PomodoroRecord } from "./PomodoroTypes";
+import { CategoryGet } from "./CategoryTypes";
+import type { GoalGet } from "./GoalTypes";
+import { PomodoroRecordGet } from "./PomodoroTypes";
 
 export interface ProjectGet {
-  name: string;
   id: number;
-  category: Category,
-  goals?: Goal[];
-  pomodoroRecords: PomodoroRecord[];
+  name: string;
+  category: CategoryGet;
+  goals?: GoalGet[];
+  pomodoroRecords: PomodoroRecordGet[];
   totalTimeMinutes: number;
-
   createdAt?: string;
   updatedAt?: string;
   color?: string;

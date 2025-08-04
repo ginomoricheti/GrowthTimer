@@ -1,29 +1,33 @@
-use serde::{Serialize, Deserialize};
+use serde::Serialize;
 
-use crate::models::{Goal, Task};
+use crate::models::tasks::TaskDTO;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct PomodoroRecord {
-    pub id: i32,
-    pub minutes: i32,
-    #[serde(rename = "idProject")]
-    pub id_project: i32,
-    #[serde(rename = "idGoal")]
-    pub id_goal: Option<i32>,
-    #[serde(rename = "idTask")]
-    pub id_task: i32,
-    pub task: Task,
-    pub goal: Option<Goal>,
-    #[serde(rename = "createdAt")]
-    pub created_at: Option<String>,
+#[derive(Debug)]
+pub struct PomodoroEntity {
+  pub id: i32,
+  pub minutes: i32,
+  pub id_project: i32,
+  pub id_goal: i32,
+  pub id_task: i32,
+  pub target_minutes: i32,
+  pub created_at: String,
 }
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PomodoroCreate {
-    pub minutes: Option<i32>, // Default 25
-    #[serde(rename = "idProject")]
-    pub id_project: i32,
-    #[serde(rename = "idGoal")]
-    pub id_goal: Option<i32>,
-    #[serde(rename = "idTask")]
-    pub id_task: i32,
+
+#[derive(Debug, Serialize)]
+pub struct PomodoroDTO {
+  pub date: String,
+  pub minutes: i32,
+  pub project: String,
+  pub task: TaskDTO,
+}
+
+impl PomodoroDTO {
+  pub fn from_entity(entity: PomodoroEntity, project_name: String, task: TaskDTO) -> Self {
+    Self { 
+      date: entity.created_at,
+      minutes: entity.minutes,
+      project: project_name,
+      task: task,
+    }
+  }
 }

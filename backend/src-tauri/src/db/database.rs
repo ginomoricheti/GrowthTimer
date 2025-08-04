@@ -1,35 +1,29 @@
-use r2d2::{Pool, PooledConnection};
-use r2d2_sqlite::SqliteConnectionManager;
-use std::sync::Arc;
+use rusqlite::{Connection, Result};
 
 pub struct Database {
-    pool: Arc<Pool<SqliteConnectionManager>>,
+    conn: Connection,
 }
 
 impl Database {
-    pub fn new(db_path: &str) -> Result<Self, Box<dyn std::error::Error>> {
-        let manager = SqliteConnectionManager::file(db_path);
-        let pool = Pool::new(manager)?;
-        Ok(Self { pool: Arc::new(pool) })
+    /// Open DB
+    pub fn new(db_path: &str) -> Result<Self> {
+        let conn = Connection::open(db_path)?;
+        Ok(Self { conn })
     }
 
-    pub fn new_in_memory() -> Result<Self, Box<dyn std::error::Error>> {
-        let manager = SqliteConnectionManager::memory();
-        let pool = Pool::new(manager)?;
-        Ok(Self { pool: Arc::new(pool) })
+    /// DB in Memory (for testing)
+    pub fn new_in_memory() -> Result<Self> {
+        let conn = Connection::open_in_memory()?;
+        Ok(Self { conn })
     }
 
-    pub fn get_conn(&self) -> PooledConnection<SqliteConnectionManager> {
-        self.pool.get().expect("No se pudo obtener una conexión del pool")
+    /// Return a mutable reference to the conexion
+    pub fn get_conn(&mut self) -> &mut Connection {
+        &mut self.conn
     }
 
-    pub fn get_pool(&self) -> Arc<Pool<SqliteConnectionManager>> {
-        Arc::clone(&self.pool)
+    /// Check if the DB is on
+    pub fn is_connected(&mut self) -> bool {
+        self.conn.execute("SELECT 1", []).is_ok()
     }
-
-    // pub fn is_connected(&self) -> bool {
-    //     self.get_conn()
-    //         .execute("SELECT 1", [])
-    //         .is_ok()
-    // }
 }

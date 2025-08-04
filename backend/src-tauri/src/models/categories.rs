@@ -1,24 +1,29 @@
-use serde::{Serialize, Deserialize};
+use serde::Serialize;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Category {
-    pub id: i32,
-    pub name: String,
-    pub color: String,
-    #[serde(rename = "totalTimeMinutes")]
-    pub total_time_minutes: i32,
-    #[serde(rename = "createdAt")]
-    pub created_at: Option<String>,
+#[derive(Debug)]
+pub struct CategoryEntity {
+  pub id: i32,
+  pub name: String,
+  pub total_time_minutes: i32,
+  pub color: String,
+  pub created_at: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CategoryCreate {
-    pub name: String,
-    pub color: String,
+#[derive(Debug, Serialize)]
+pub struct CategoryDTO {
+  pub id: i32,
+  pub name: String,
+  pub color: String,
+  pub total_time_minutes: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CategoryUpdate {
-    pub name: Option<String>,
-    pub color: Option<String>,
+impl From<CategoryEntity> for CategoryDTO {
+  fn from(entity: CategoryEntity) -> Self {
+    Self { 
+      id: entity.id,
+      name: entity.name,
+      total_time_minutes: entity.total_time_minutes,
+      color: entity.color
+    }
+  }
 }

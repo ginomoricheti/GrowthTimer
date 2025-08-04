@@ -1,36 +1,47 @@
-use serde::{Serialize, Deserialize};
+use serde::Serialize;
 
-use crate::models::{Category, Goal, PomodoroRecord};
+use crate::models::{
+  categories::CategoryDTO,
+  goals::GoalDTO,
+  pomodoros::PomodoroDTO
+};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Project {
+#[derive(Debug)]
+pub struct ProjectEntity {
     pub id: i32,
     pub name: String,
-    pub category: Category,
-    pub goals: Option<Vec<Goal>>,
-    #[serde(rename = "pomodoroRecords")]
-    pub pomodoro_records: Vec<PomodoroRecord>,
-    #[serde(rename = "totalTimeMinutes")]
-    pub total_time_minutes: i32,
-    #[serde(rename = "createdAt")]
-    pub created_at: Option<String>,
-    #[serde(rename = "updatedAt")]
-    pub updated_at: Option<String>,
-    pub color: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectCreate {
-    pub name: String,
-    #[serde(rename = "idCategory")]
     pub id_category: i32,
+    pub total_time_minutes: i32,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ProjectDTO {
+    pub id: i32,
+    pub name: String,
+    pub category: CategoryDTO,
+    pub goals: Vec<GoalDTO>,
+    pub pomodoro_records: Vec<PomodoroDTO>,
+    pub total_time_minutes: i32,
+    pub created_at: String,
+    pub updated_at: String,
     pub color: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectUpdate {
-    pub name: Option<String>,
-    #[serde(rename = "idCategory")]
-    pub id_category: Option<i32>,
-    pub color: Option<String>,
+impl From<(ProjectEntity, CategoryDTO, Vec<GoalDTO>, Vec<PomodoroDTO>)> for ProjectDTO {
+    fn from(data: (ProjectEntity, CategoryDTO, Vec<GoalDTO>, Vec<PomodoroDTO>)) -> Self {
+        let (entity, category, goals, pomodoros) = data;
+        Self {
+            id: entity.id,
+            name: entity.name,
+            category,
+            goals,
+            pomodoro_records: pomodoros,
+            total_time_minutes: entity.total_time_minutes,
+            created_at: entity.created_at,
+            updated_at: entity.updated_at,
+            color: None,
+        }
+    }
 }
