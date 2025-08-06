@@ -15,6 +15,10 @@ use std::sync::{Arc, Mutex};
 
 fn main() {
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            commands::get_categories,
+            commands::get_tasks,
+        ])
         .setup(|app| {
             println!("Running app...");
 
@@ -62,7 +66,21 @@ fn main() {
                 }
             }
             // TEST TASK_SERVICE
+            {
+                use crate::services::task_service;
 
+                match task_service::fetch_all_tasks(&mut database) {
+                    Ok(tasks) => {
+                        println!("tasks_services test OK: se obtuvieron {} tareas", tasks.len());
+                        // for cat in categories.iter() {
+                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
+                        // }
+                    }
+                    Err(err) => {
+                        eprintln!("❌ Service test FAILED: {}", err);
+                    }
+                }
+            }
 
             // 4. Share connection
             let database = Arc::new(Mutex::new(database));
