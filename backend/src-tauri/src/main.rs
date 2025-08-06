@@ -18,11 +18,11 @@ fn main() {
         .setup(|app| {
             println!("Running app...");
 
-            // 1. Ruta de la base de datos
+            // 1. DB Route
             let db_path = get_db_path();
             println!("DB Route: {}", db_path.display());
 
-            // 2. Conectar base de datos
+            // 2. DB Connection
             let db_path_str = db_path.to_string_lossy();
             let mut database = Database::new(&db_path_str)
                 .unwrap_or_else(|e| {
@@ -30,7 +30,7 @@ fn main() {
                     Database::new_in_memory().expect("It couldn't even be done in memory.")
                 });
 
-            // 3. Crear esquema y triggers (se necesita conexión mutable)
+            // 3. Schema & Triggers setup
             {
                 let conn = database.get_conn();
                 if let Err(e) = create_schema(&conn) {
@@ -44,7 +44,27 @@ fn main() {
                 }
             }
 
-            // 4. Compartir la conexión entre los comandos (Arc<Mutex<...>>)
+            
+            // TEST CATEGORY_SERVICE
+            {
+                use crate::services::category_service;
+
+                match category_service::fetch_all_categories(&mut database) {
+                    Ok(categories) => {
+                        println!("category_service test OK: se obtuvieron {} categorías", categories.len());
+                        // for cat in categories.iter() {
+                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
+                        // }
+                    }
+                    Err(err) => {
+                        eprintln!("❌ Service test FAILED: {}", err);
+                    }
+                }
+            }
+            // TEST TASK_SERVICE
+
+
+            // 4. Share connection
             let database = Arc::new(Mutex::new(database));
             app.manage(database);
 
