@@ -8,7 +8,6 @@ pub struct GoalEntity {
   pub target_minutes: i32,
   pub completed_minutes: i32,
   pub is_completed: bool,
-  pub total_time_minutes: i32,
   pub created_at: String,
   pub updated_at: String,
 }

@@ -1,9 +1,9 @@
 use serde::Serialize;
 
 use crate::models::{
-  categories::CategoryDTO,
-  goals::GoalDTO,
-  pomodoros::PomodoroDTO
+    categories::CategoryDTO,
+    goals::GoalDTO,
+    pomodoros::PomodoroDTO
 };
 
 #[derive(Debug)]
@@ -20,7 +20,7 @@ pub struct ProjectEntity {
 pub struct ProjectDTO {
     pub id: i32,
     pub name: String,
-    pub category: CategoryDTO,
+    pub category_name: String,
     pub goals: Vec<GoalDTO>,
     pub pomodoro_records: Vec<PomodoroDTO>,
     pub total_time_minutes: i32,
@@ -29,13 +29,13 @@ pub struct ProjectDTO {
     pub color: Option<String>,
 }
 
-impl From<(ProjectEntity, CategoryDTO, Vec<GoalDTO>, Vec<PomodoroDTO>)> for ProjectDTO {
-    fn from(data: (ProjectEntity, CategoryDTO, Vec<GoalDTO>, Vec<PomodoroDTO>)) -> Self {
+impl From<(ProjectEntity, String, Vec<GoalDTO>, Vec<PomodoroDTO>)> for ProjectDTO {
+    fn from(data: (ProjectEntity, String, Vec<GoalDTO>, Vec<PomodoroDTO>)) -> Self {
         let (entity, category, goals, pomodoros) = data;
         Self {
             id: entity.id,
             name: entity.name,
-            category,
+            category_name: category,
             goals,
             pomodoro_records: pomodoros,
             total_time_minutes: entity.total_time_minutes,
@@ -45,3 +45,4 @@ impl From<(ProjectEntity, CategoryDTO, Vec<GoalDTO>, Vec<PomodoroDTO>)> for Proj
         }
     }
 }
+

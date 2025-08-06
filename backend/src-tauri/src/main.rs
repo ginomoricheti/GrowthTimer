@@ -72,7 +72,7 @@ fn main() {
 
                 match task_service::fetch_all_tasks(&mut database) {
                     Ok(tasks) => {
-                        println!("tasks_services test OK: se obtuvieron {} tareas", tasks.len());
+                        println!("tasks_service test OK: se obtuvieron {} tareas", tasks.len());
                         // for cat in categories.iter() {
                         //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
                         // }
@@ -88,10 +88,26 @@ fn main() {
 
                 match pomodoro_service::fetch_all_pomodoros(&mut database) {
                     Ok(pomodoros) => {
-                        println!("tasks_pomodoros test OK: se obtuvieron {} pomodoros", pomodoros.len());
+                        println!("pomodoro_service test OK: se obtuvieron {} pomodoros", pomodoros.len());
                         // for cat in categories.iter() {
                         //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
                         // }
+                    }
+                    Err(err) => {
+                        eprintln!("Service test FAILED: {}", err);
+                    }
+                }
+            }
+            // TEST PROJECTS_SERVICE
+            {
+                use crate::services::project_service;
+
+                match project_service::fetch_all_projects(&mut database) {
+                    Ok(pomodoros) => {
+                        println!("project_service test OK: se obtuvo {} proyectos", pomodoros.len());
+                        for project in &pomodoros {
+                            println!("{:?}", project);
+                        }
                     }
                     Err(err) => {
                         eprintln!("Service test FAILED: {}", err);
