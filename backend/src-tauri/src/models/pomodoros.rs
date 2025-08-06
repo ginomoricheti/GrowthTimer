@@ -9,7 +9,6 @@ pub struct PomodoroEntity {
   pub id_project: i32,
   pub id_goal: i32,
   pub id_task: i32,
-  pub target_minutes: i32,
   pub created_at: String,
 }
 

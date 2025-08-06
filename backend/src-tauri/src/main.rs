@@ -18,6 +18,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::get_categories,
             commands::get_tasks,
+            commands::get_pomodoros
         ])
         .setup(|app| {
             println!("Running app...");
@@ -61,7 +62,7 @@ fn main() {
                         // }
                     }
                     Err(err) => {
-                        eprintln!("❌ Service test FAILED: {}", err);
+                        eprintln!("Service test FAILED: {}", err);
                     }
                 }
             }
@@ -77,7 +78,23 @@ fn main() {
                         // }
                     }
                     Err(err) => {
-                        eprintln!("❌ Service test FAILED: {}", err);
+                        eprintln!("Service test FAILED: {}", err);
+                    }
+                }
+            }
+            // TEST POMODORO_SERVICE
+            {
+                use crate::services::pomodoro_service;
+
+                match pomodoro_service::fetch_all_pomodoros(&mut database) {
+                    Ok(pomodoros) => {
+                        println!("tasks_pomodoros test OK: se obtuvieron {} pomodoros", pomodoros.len());
+                        // for cat in categories.iter() {
+                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
+                        // }
+                    }
+                    Err(err) => {
+                        eprintln!("Service test FAILED: {}", err);
                     }
                 }
             }
