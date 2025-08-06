@@ -10,6 +10,7 @@ pub struct TaskEntity {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TaskDTO {
   pub name: String,
   pub total_time_minutes: i32,

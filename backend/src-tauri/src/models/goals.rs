@@ -13,6 +13,7 @@ pub struct GoalEntity {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GoalDTO {
   pub id: i32,
   pub title: String,

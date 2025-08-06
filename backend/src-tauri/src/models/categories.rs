@@ -10,6 +10,7 @@ pub struct CategoryEntity {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CategoryDTO {
   pub id: i32,
   pub name: String,

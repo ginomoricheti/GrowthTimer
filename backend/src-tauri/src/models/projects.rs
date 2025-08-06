@@ -17,6 +17,7 @@ pub struct ProjectEntity {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProjectDTO {
     pub id: i32,
     pub name: String,

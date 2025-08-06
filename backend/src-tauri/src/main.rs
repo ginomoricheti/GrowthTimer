@@ -103,11 +103,9 @@ fn main() {
                 use crate::services::project_service;
 
                 match project_service::fetch_all_projects(&mut database) {
-                    Ok(pomodoros) => {
-                        println!("project_service test OK: se obtuvo {} proyectos", pomodoros.len());
-                        for project in &pomodoros {
-                            println!("{:?}", project);
-                        }
+                    Ok(projects) => {
+                        let json = serde_json::to_string_pretty(&projects).unwrap();
+                        println!("{}", json);
                     }
                     Err(err) => {
                         eprintln!("Service test FAILED: {}", err);
