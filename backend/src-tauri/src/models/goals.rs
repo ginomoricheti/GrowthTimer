@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug)]
 pub struct GoalEntity {
@@ -10,6 +10,14 @@ pub struct GoalEntity {
   pub is_completed: bool,
   pub created_at: String,
   pub updated_at: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GoalCreate {
+  pub title: String,
+  pub id_project: i32,
+  pub target_minutes: i32,
 }
 
 #[derive(Debug, Serialize)]

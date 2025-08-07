@@ -30,6 +30,7 @@ pub fn get_all_pomodoros(conn: &Connection) -> Result<Vec<PomodoroDTO>> {
         };
 
         let task = TaskDTO {
+            id: row.get(4)?,
             name: row.get(5)?,
             color: row.get(6)?,
             total_time_minutes: row.get(7)?,

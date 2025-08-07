@@ -9,7 +9,7 @@ export interface PomodoroRecordGet {
 
 export interface PomodoroRecordPost {
   minutes: number;
-  id_project: number;
-  id_task: number;
-  id_goal: number;
+  idProject: number;
+  idTask: number;
+  idGoal: number;
 }

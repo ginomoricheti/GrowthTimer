@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::models::tasks::TaskDTO;
 
@@ -10,6 +10,15 @@ pub struct PomodoroEntity {
   pub id_goal: i32,
   pub id_task: i32,
   pub created_at: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PomodoroCreate {
+  pub minutes: i32,
+  pub id_project: i32,
+  pub id_goal: i32,
+  pub id_task: i32,
 }
 
 #[derive(Debug, Serialize)]

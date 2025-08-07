@@ -69,6 +69,7 @@ pub fn get_all_projects(conn: &Connection) -> Result<Vec<ProjectDTO>> {
             };
 
             let task = TaskDTO {
+                id: p_row.get(3)?,
                 name: p_row.get(4)?,
                 color: p_row.get(5)?,
                 total_time_minutes: p_row.get(6)?,

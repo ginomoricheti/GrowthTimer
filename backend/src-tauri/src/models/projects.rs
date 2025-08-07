@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::models::{
     categories::CategoryDTO,
@@ -11,10 +11,20 @@ pub struct ProjectEntity {
     pub id: i32,
     pub name: String,
     pub id_category: i32,
+    pub color: String,
     pub total_time_minutes: i32,
     pub created_at: String,
     pub updated_at: String,
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectCreate {
+    pub name: String,
+    pub id_category: i32,
+    pub color: String,
+}
+
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -27,7 +37,7 @@ pub struct ProjectDTO {
     pub total_time_minutes: i32,
     pub created_at: String,
     pub updated_at: String,
-    pub color: Option<String>,
+    pub color: String,
 }
 
 impl From<(ProjectEntity, String, Vec<GoalDTO>, Vec<PomodoroDTO>)> for ProjectDTO {
@@ -42,7 +52,7 @@ impl From<(ProjectEntity, String, Vec<GoalDTO>, Vec<PomodoroDTO>)> for ProjectDT
             total_time_minutes: entity.total_time_minutes,
             created_at: entity.created_at,
             updated_at: entity.updated_at,
-            color: None,
+            color: entity.color,
         }
     }
 }

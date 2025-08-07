@@ -12,3 +12,9 @@ export interface ProjectGet {
   updatedAt?: string;
   color?: string;
 }
+
+export interface ProjectPost {
+  name: string;
+  idCategory: number;
+  color: string;
+}

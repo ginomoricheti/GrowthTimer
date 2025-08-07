@@ -18,7 +18,11 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::get_categories,
             commands::get_tasks,
-            commands::get_pomodoros
+            commands::get_pomodoros,
+            commands::get_projects,
+            commands::create_project,
+            commands::create_goal,
+            commands::create_pomodoro,
         ])
         .setup(|app| {
             println!("Running app...");
@@ -48,71 +52,7 @@ fn main() {
                     std::process::exit(1);
                 }
             }
-
             
-            // TEST CATEGORY_SERVICE
-            {
-                use crate::services::category_service;
-
-                match category_service::fetch_all_categories(&mut database) {
-                    Ok(categories) => {
-                        println!("category_service test OK: se obtuvieron {} categorías", categories.len());
-                        // for cat in categories.iter() {
-                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
-                        // }
-                    }
-                    Err(err) => {
-                        eprintln!("Service test FAILED: {}", err);
-                    }
-                }
-            }
-            // TEST TASK_SERVICE
-            {
-                use crate::services::task_service;
-
-                match task_service::fetch_all_tasks(&mut database) {
-                    Ok(tasks) => {
-                        println!("tasks_service test OK: se obtuvieron {} tareas", tasks.len());
-                        // for cat in categories.iter() {
-                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
-                        // }
-                    }
-                    Err(err) => {
-                        eprintln!("Service test FAILED: {}", err);
-                    }
-                }
-            }
-            // TEST POMODORO_SERVICE
-            {
-                use crate::services::pomodoro_service;
-
-                match pomodoro_service::fetch_all_pomodoros(&mut database) {
-                    Ok(pomodoros) => {
-                        println!("pomodoro_service test OK: se obtuvieron {} pomodoros", pomodoros.len());
-                        // for cat in categories.iter() {
-                        //     println!(" - {} {}mins ({})", cat.name, cat.total_time_minutes, cat.color);
-                        // }
-                    }
-                    Err(err) => {
-                        eprintln!("Service test FAILED: {}", err);
-                    }
-                }
-            }
-            // TEST PROJECTS_SERVICE
-            {
-                use crate::services::project_service;
-
-                match project_service::fetch_all_projects(&mut database) {
-                    Ok(projects) => {
-                        let json = serde_json::to_string_pretty(&projects).unwrap();
-                        println!("{}", json);
-                    }
-                    Err(err) => {
-                        eprintln!("Service test FAILED: {}", err);
-                    }
-                }
-            }
-
             // 4. Share connection
             let database = Arc::new(Mutex::new(database));
             app.manage(database);

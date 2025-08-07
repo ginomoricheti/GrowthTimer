@@ -12,6 +12,7 @@ pub struct TaskEntity {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskDTO {
+  pub id: i32,
   pub name: String,
   pub total_time_minutes: i32,
   pub color: String,
@@ -20,6 +21,7 @@ pub struct TaskDTO {
 impl From<TaskEntity> for TaskDTO {
   fn from(entity: TaskEntity) -> Self {
     Self { 
+      id: entity.id,
       name: entity.name,
       total_time_minutes: entity.total_time_minutes,
       color: entity.color

@@ -7,3 +7,9 @@ export interface GoalGet {
   created_at: string;
   updated_at: string;
 }
+
+export interface GoalPost {
+  title: string;
+  idProject: number;
+  targetMinutes: number;
+}
