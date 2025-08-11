@@ -3,28 +3,50 @@ import CountdownTimer from "../../features/timer/ui/CountdownTimer/CountdownTime
 import styles from "./PomodoroPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
-import { Category, Goal, PomodoroRecord, ProjectGet, Task } from "@/shared/types";
+import { GoalGet, PomodoroRecordGet, ProjectGet, TaskGet } from "@/shared/types";
 import Slider from "@/features/slider/ui/Slider/Slider";
 import Card from "@/features/slider/ui/Card/Card";
 import { Graphs } from "@/features/graphs/Graphs";
 
 // ------------------------- TEMPORAL -------------------------
-const exampleCategories: Category[] = [
-  { id: 1, name: "Estudio", color: "#FF5733" },
-  { id: 2, name: "Trabajo", color: "#33C1FF" },
+
+const exampleTasks: TaskGet[] = [
+  {
+    id: 1,
+    name: "Leer",
+    color: "#AAFFAA",
+    totalTimeMinutes: 50
+  },
+  {
+    id: 2,
+    name: "Programar",
+    color: "#FFAAFF",
+    totalTimeMinutes: 50
+  },
 ];
 
-const exampleTasks: Task[] = [
-  { id: 1, name: "Leer", color: "#AAFFAA" },
-  { id: 2, name: "Programar", color: "#FFAAFF" },
+const exampleGoals: GoalGet[] = [
+  {
+    id: 3,
+    title: "Goal 321",
+    targetMinutes: 200,
+    completedMinutes: 100,
+    isCompleted: false,
+    createdAt: "string",
+    updatedAt: "string",
+  },
+  {
+    id: 3,
+    title: "Goal 321",
+    targetMinutes: 200,
+    completedMinutes: 100,
+    isCompleted: false,
+    createdAt: "string",
+    updatedAt: "string",
+  },
 ];
 
-const exampleGoals: Goal[] = [
-  { id: 1, name: "Completar curso de TypeScript", projectCode: 101 },
-  { id: 2, name: "Desarrollar app Pomodoro", projectCode: 101 },
-];
-
-const examplePomodoroRecords: PomodoroRecord[] = [
+const examplePomodoroRecords: PomodoroRecordGet[] = [
   {
     date: "2025-07-25",
     minutes: 25,
@@ -43,7 +65,7 @@ const exampleProjects: ProjectGet[] = [
   {
     id: 101,
     name: "Estudio Pomodoro",
-    category: exampleCategories[0],
+    categoryName: "Pipipi",
     goals: exampleGoals,
     pomodoroRecords: examplePomodoroRecords,
     totalTimeMinutes: 75,
@@ -54,7 +76,7 @@ const exampleProjects: ProjectGet[] = [
   {
     id: 102,
     name: "Trabajo Freelance",
-    category: exampleCategories[1],
+    categoryName: "Pipipi",
     goals: [],
     pomodoroRecords: [],
     totalTimeMinutes: 0,
@@ -117,8 +139,8 @@ const PomodoroPage = () => {
                 }
               }}
             >
-              {exampleProjects.map((item) => 
-                <Graphs data={item}/>
+              {exampleProjects.map(() => 
+                <Graphs />
               )}
             </Slider>
           </div>

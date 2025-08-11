@@ -1,6 +1,6 @@
 import './HeatMap.css'
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { PomodoroRecord } from '@/shared/types';
+import { PomodoroRecordGet } from '@/shared/types';
 import React from 'react';
 
 const HeatMap = () => {
@@ -14,10 +14,12 @@ const HeatMap = () => {
     content: string;
   }>({ visible: false, x: 0, y: 0, content: '' });
 
+  console.log(tooltip)
+
   // New state for modal
   const [modal, setModal] = useState<{
     visible: boolean;
-    data: PomodoroRecord & { date: string } | null;
+    data: PomodoroRecordGet & { date: string } | null;
   }>({ visible: false, data: null });
 
   let hoverTimeout: ReturnType<typeof setTimeout>;
@@ -32,59 +34,57 @@ const HeatMap = () => {
   };
 
   // Heatmap data
-  const dataset: PomodoroRecord[] = [
-    { date: "2025-01-15", minutes: 100, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-02-16", minutes: 400, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-03-17", minutes: 300, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-04-14", minutes: 350, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-05-13", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-06-13", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-07-13", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-08-15", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-09-17", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-10-03", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-11-01", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-12-01", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
-    { date: "2025-01-30", minutes: 270, project: "English", task: {
-      name: "Prueba",
-      id: 1
-    } },
+  const dataset: PomodoroRecordGet[] = [
+    {
+      date: "2025-01-15",
+      minutes: 100,
+      project: "English",
+      task: {
+        name: "Prueba",
+        id: 1,
+        totalTimeMinutes: 10
+      }
+    },
+    {
+      date: "2025-01-15",
+      minutes: 100,
+      project: "English",
+      task: {
+        name: "Prueba",
+        id: 1,
+        totalTimeMinutes: 10
+      }
+    },
+    {
+      date: "2025-01-15",
+      minutes: 100,
+      project: "English",
+      task: {
+        name: "Prueba",
+        id: 1,
+        totalTimeMinutes: 10
+      }
+    },
+    {
+      date: "2025-01-15",
+      minutes: 100,
+      project: "English",
+      task: {
+        name: "Prueba",
+        id: 1,
+        totalTimeMinutes: 10
+      }
+    },
+    {
+      date: "2025-01-15",
+      minutes: 100,
+      project: "English",
+      task: {
+        name: "Prueba",
+        id: 1,
+        totalTimeMinutes: 10
+      }
+    },
   ];
 
   // Heatmap Config - Reduced height
@@ -139,7 +139,7 @@ const HeatMap = () => {
   // Generate data for all days of the year
   const generateYearData = useCallback(() => {
     const dataMap = new Map(dataset.map(d => [d.date, d]));
-    const allDates: (PomodoroRecord & { date: string; x: number; y: number })[] = [];
+    const allDates: (PomodoroRecordGet & { date: string; x: number; y: number })[] = [];
 
     for (let m = 0; m < 12; m++) {
       const start = new Date(config.year, m, 1);
