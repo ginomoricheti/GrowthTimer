@@ -1,0 +1,26 @@
+.menuItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.menuButton:hover {
+  background-color: #414141;
+}
+
+.menuLabel {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.subMenu {
+  display: flex;
+  flex-direction: column;
+}

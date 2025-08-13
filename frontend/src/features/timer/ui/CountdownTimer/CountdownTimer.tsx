@@ -125,6 +125,7 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
             goals: p.goals?.filter(g => g.id === p.id)
           }))}
           categories={categories}
+          tasks={tasks}
         />
       </div>
       <h4 className={styles.currentTimeDetails}>You've been worked for <span>{formattedWorkedTime}</span></h4>

@@ -9,11 +9,12 @@ type EndSessionPopupProps = {
   onConfirm: (data: {
     project: ProjectGet;
     goal: GoalGet;
-    task: TaskGet;
+    task: number;
     categoryId: number;
   }) => void;
   projects: ProjectGet[];
   categories: CategoryGet[];
+  tasks: TaskGet[];
 };
 
 const EndSessionPopup = ({
@@ -22,25 +23,26 @@ const EndSessionPopup = ({
   onConfirm,
   projects,
   categories,
+  tasks,
 }: EndSessionPopupProps) => {
   const [selectedProject, setSelectedProject] = useState<ProjectGet | null>(null);
   const [selectedGoal, setSelectedGoal] = useState<GoalGet | null>(null);
-  const [selectedTask, setSelectedTask] = useState<TaskGet | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
 
   useEffect(() => {
     if (!isOpen) {
       setSelectedProject(null);
       setSelectedGoal(null);
-      setSelectedTask(null);
+      setSelectedTaskId(0);
       setSelectedCategoryId(0);
     }
   }, [isOpen]);
 
-  const availableTasks: TaskGet[] =
-    selectedProject?.pomodoroRecords
-      .map((record) => record.task)
-      .filter((t): t is TaskGet => t !== undefined) ?? [];
+  const tasksOptions = tasks.map(task => ({
+    value: task.id,
+    label: task.name,
+  }));
 
   const categoryOptions = categories.map(cat => ({
     value: cat.id,
@@ -62,7 +64,7 @@ const EndSessionPopup = ({
               const project = projects.find(p => p.id === id) || null;
               setSelectedProject(project);
               setSelectedGoal(null);
-              setSelectedTask(null);
+              setSelectedTaskId(0);
             }}
             creatable={false}
           />
@@ -88,23 +90,19 @@ const EndSessionPopup = ({
             onChange={(id) => {
               const goal = selectedProject?.goals?.find(g => g.id === id) || null;
               setSelectedGoal(goal);
-              setSelectedTask(null);
+              setSelectedTaskId(0);
             }}
             creatable={false}
           />
 
           <SelectorCreatable
             label="Task"
-            items={availableTasks}
-            defaultId={selectedTask?.id || 0}
-            mapItem={(task) => ({
-              value: task.id,
-              label: task.name
-            })}
-            onChange={(id) => {
-              const task = availableTasks.find(t => t.id === id) || null;
-              setSelectedTask(task);
-            }}
+            items={tasksOptions.map(opt => ({
+              id: opt.value,
+              name: opt.label,
+            }))}
+            defaultId={selectedTaskId}
+            onChange={(id) => setSelectedTaskId(id)}
           />
 
           <div className="flex justify-end gap-4 mt-4">
@@ -116,13 +114,13 @@ const EndSessionPopup = ({
             </button>
             <button
               className="px-4 py-2 bg-white rounded text-black hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!selectedProject || !selectedGoal || !selectedTask || !selectedCategoryId}
+              disabled={!selectedProject || !selectedGoal || !selectedTaskId || !selectedCategoryId}
               onClick={() => {
-                if (selectedProject && selectedGoal && selectedTask && selectedCategoryId) {
+                if (selectedProject && selectedGoal && selectedTaskId && selectedCategoryId) {
                   onConfirm({
                     project: selectedProject,
                     goal: selectedGoal,
-                    task: selectedTask,
+                    task: selectedTaskId,
                     categoryId: selectedCategoryId,
                   });
                   onClose();

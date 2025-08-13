@@ -6,6 +6,8 @@ import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import Card from "@/features/slider/ui/Card/Card";
 import { Graphs } from "@/features/graphs/Graphs";
 import useGetAllData from "@/shared/hooks/useGetAllData";
+import CustomSidebar from "@/features/sidebar/CustomSidebar";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const PomodoroPage = () => {
   const [showSecondPage, setShowSecondPage] = useState(false);
@@ -25,6 +27,7 @@ const PomodoroPage = () => {
           transform: showSecondPage ? "translateX(-100vw)" : "translateX(0)",
         }}
       >
+        <CustomSidebar />
         {/* First view (Pomodoro) */}
         <div className={styles.page}>
           <CountdownTimer
@@ -34,7 +37,7 @@ const PomodoroPage = () => {
             pomodoros = {data.pomodoros}
           />
           <button onClick={() => setShowSecondPage(true)} className={`${styles.navButton} ${styles.rightButton}`}>
-            <FontAwesomeIcon icon={faAnglesRight} />
+            <FontAwesomeIcon icon={faAnglesRight as unknown as IconProp} />
           </button>
         </div>
 
@@ -49,7 +52,7 @@ const PomodoroPage = () => {
             <Graphs data={data.summary}/>
           </div>
           <button onClick={() => setShowSecondPage(false)} className={`${styles.navButton} ${styles.leftButton}`}>
-            <FontAwesomeIcon icon={faAnglesLeft} />
+            <FontAwesomeIcon icon={faAnglesLeft as unknown as IconProp} />
           </button>
         </div>
       </div>

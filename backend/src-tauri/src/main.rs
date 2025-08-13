@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+use tauri_plugin_opener;
 
 mod config;
 mod db;
@@ -16,6 +17,7 @@ use std::sync::{Arc, Mutex};
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             commands::get_categories,
             commands::get_tasks,

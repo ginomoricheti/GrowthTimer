@@ -1,0 +1,41 @@
+.sidebarContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #2e2e2e;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.footer {
+  display: flex;
+  padding: 10px;
+  justify-content: space-around;
+  align-items: center;
+  gap: 5px;
+  transition: flex-direction 0.3s;
+}
+
+.footer a {
+  color: #ffffff;
+  margin: 5px;
+  font-size: 18px;
+}
+
+.footerIcon {
+  width: 40px;
+  padding: 5px;
+  cursor: pointer;
+}
