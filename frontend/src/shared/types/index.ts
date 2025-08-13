@@ -3,3 +3,4 @@ export * from './GoalTypes';
 export * from './CategoryTypes';
 export * from './PomodoroTypes';
 export * from './TaskTypes';
+export * from './SummaryTypes';

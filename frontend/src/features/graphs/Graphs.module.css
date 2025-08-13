@@ -1,12 +1,14 @@
 .graphsSection {
   display: flex;
   align-items: center;
+  width: 100vw;
   gap: 10px;
+  margin-right: 5%;
 }
 
 .secondaryGraphsSection {
   display: flex;
   flex-direction: column;
-  min-width: 20%;
-  gap: 10px;
+  min-width: 25%;
+  gap: 70px;
 }

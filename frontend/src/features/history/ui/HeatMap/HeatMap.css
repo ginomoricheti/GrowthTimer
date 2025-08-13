@@ -60,13 +60,12 @@
 
 .hoverHistoryZone {
   position: fixed;
-  left: 50%;
+  left: 25%;
   bottom: 0;
   transform: translateX(-50%);
   width: 30vw;
-  height: 60px;
+  height: 70px;
   z-index: 100;
-
 }
 
 #orderHeatMapBox.visible {

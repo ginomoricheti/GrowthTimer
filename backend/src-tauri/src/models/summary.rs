@@ -1,12 +1,14 @@
 use serde::Serialize;
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SummaryItem {
     pub total_minutes: i64,
     pub unique_tasks: i64,
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProjectSummaryItem {
     pub project_name: String,
     pub total_minutes: i64,
@@ -14,6 +16,7 @@ pub struct ProjectSummaryItem {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CategorySummaryItem {
     pub category_name: String,
     pub total_minutes: i64,
@@ -21,6 +24,7 @@ pub struct CategorySummaryItem {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TaskSummaryItem {
     pub task_name: String,
     pub total_minutes: i64,
@@ -28,8 +32,9 @@ pub struct TaskSummaryItem {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SummaryReport {
-    pub por_proyecto: Vec<ProjectSummaryItem>,
-    pub por_categoria: Vec<CategorySummaryItem>,
-    pub por_tarea: Vec<TaskSummaryItem>,
+    pub by_project: Vec<ProjectSummaryItem>,
+    pub by_category: Vec<CategorySummaryItem>,
+    pub by_task: Vec<TaskSummaryItem>,
 }

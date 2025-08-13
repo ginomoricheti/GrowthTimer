@@ -24,6 +24,7 @@ fn main() {
             commands::create_project,
             commands::create_goal,
             commands::create_pomodoro,
+            commands::get_summary_report,
         ])
         .setup(|app| {
             println!("Running app...");

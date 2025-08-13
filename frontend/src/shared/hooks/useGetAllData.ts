@@ -1,28 +1,48 @@
 import { invoke } from '@tauri-apps/api/core';
 import { useState } from 'react';
+import { CategoryGet, PomodoroRecordGet, ProjectGet, ReportGet, TaskGet } from '../types';
+
+interface DataProps {
+  categories: CategoryGet[],
+  projects: ProjectGet[],
+  tasks: TaskGet[],
+  pomodoros: PomodoroRecordGet[],
+  summary: ReportGet[],
+}
 
 const useGetAllData = () => {
-  const [data, setData] = useState({
+  const [data, setData] = useState<DataProps>({
     categories: [],
-    goals: [],
     projects: [],
     tasks: [],
-    pomodoros: []
+    pomodoros: [],
+    summary: [],
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
   const fetchAllData = async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      const categories = await invoke('get_all_categories');
-      const goals = await invoke('get_all_goals');
-      const projects = await invoke('get_all_projects');
-      const tasks = await invoke('get_all_tasks');
-      const pomodoros = await invoke('get_all_pomodoros');
+      const projects = await invoke<ProjectGet[]>('get_projects');
+      const categories = await invoke<CategoryGet[]>('get_categories');
+      const pomodoros = await invoke<PomodoroRecordGet[]>('get_pomodoros');
+      const tasks = await invoke<TaskGet[]>('get_tasks');
+      const summary = await invoke<ReportGet[]>('get_summary_report')
       
-      setData({ categories, goals, projects, tasks, pomodoros });
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      setData({ categories, summary, projects, tasks, pomodoros });
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError(err as Error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return { data, fetchAllData, loading, error };
 };
+
+export default useGetAllData;

@@ -2,11 +2,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: 200px;
-  height: 110px;
+  justify-self: center;
+  width: 230px;
+  height: 170px;
   padding: 10px 15px;
   border-radius: 16px;
+  margin: 0 3px;
   background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
   box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2),
               -2px -2px 5px rgba(255, 255, 255, 0.05);
@@ -23,6 +24,7 @@
   font-size: 16px;
   font-weight: 600;
   position: relative;
+  margin-bottom: 8px;
 }
 
 .cardBox h3::after {
@@ -38,7 +40,7 @@
 .details p {
   text-align: left;
   margin: 6px 0;
-  font-size: 0.95rem;
+  font-size: 0.80rem;
   line-height: 1.3;
 }
 

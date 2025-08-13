@@ -8,12 +8,42 @@ type CardProps = {
 const Card = ({ data }: CardProps) => {
   if (!data) return null;
 
+  const hours = Math.floor(data.totalTimeMinutes / 60);
+  const minutes = data.totalTimeMinutes % 60;
+
+  // Search the first incomplete goal
+  const currentGoal = data.goals?.find(goal => !goal.isCompleted);
+
+  let goalInfo = null;
+  if (currentGoal) {
+    const remainingMinutes = Math.max(currentGoal.targetMinutes - currentGoal.completedMinutes, 0);
+    const remainingHours = Math.floor(remainingMinutes / 60);
+    const remainingMins = remainingMinutes % 60;
+
+    goalInfo = (
+      <>
+        <p>
+          <span>Actual Goal:</span> {currentGoal.title}
+        </p>
+        <p>
+          <span>Remaining Time:</span> {remainingHours}h {remainingMins}m
+        </p>
+      </>
+    );
+  } else {
+    goalInfo = 
+    <>
+      <p><span>Actual Goal:</span> No available goals</p>
+    </>
+  }
+
   return (
     <div className={styles.cardBox}>
       <h3>{data.name}</h3>
       <div className={styles.details}>
-        <p><span>Type:</span> Project</p>
-        <p><span>ID:</span> {data.id}</p>
+        <p><span>Type:</span> {data.categoryName}</p>
+        <p><span>Total time:</span> {hours}h {minutes}m</p>
+        {goalInfo}
       </div>
     </div>
   );

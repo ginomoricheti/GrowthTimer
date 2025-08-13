@@ -1,4 +1,5 @@
 use rusqlite::{Connection, Result};
+use tauri::http::header::PROXY_AUTHENTICATE;
 use crate::models::{
     projects::ProjectDTO,
     goals::{GoalEntity, GoalDTO},

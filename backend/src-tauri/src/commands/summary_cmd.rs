@@ -9,6 +9,6 @@ pub fn get_summary_report(
     db: State<'_, Arc<Mutex<Database>>>
 ) -> Result<SummaryReport, String> {
     let mut db = db.lock().map_err(|_| "Failed to lock DB")?;
-    summary_report_service::generate_report(&mut db)
+    summary_report::generate_summary_report(&mut db)
         .map_err(|e| format!("Failed to generate report: {}", e))
 }

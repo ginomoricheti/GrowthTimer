@@ -5,14 +5,14 @@ use rusqlite::Connection;
 pub fn generate_summary_report(db: &mut Database) -> Result<SummaryReport, Box<dyn std::error::Error>> {
     let conn = db.get_conn();
 
-    let por_proyecto = fetch_summary_by_project(conn)?;
-    let por_categoria = fetch_summary_by_category(conn)?;
-    let por_tarea = fetch_summary_by_task(conn)?;
+    let by_project = fetch_summary_by_project(conn)?;
+    let by_category = fetch_summary_by_category(conn)?;
+    let by_task = fetch_summary_by_task(conn)?;
 
     Ok(SummaryReport {
-        por_proyecto,
-        por_categoria,
-        por_tarea,
+        by_project,
+        by_category,
+        by_task,
     })
 }
 
