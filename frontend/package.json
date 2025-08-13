@@ -21,6 +21,7 @@
     "primereact": "^10.9.6",
     "react": "^19.1.0",
     "react-chartjs-2": "^5.3.0",
+    "react-select": "^5.10.2",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {

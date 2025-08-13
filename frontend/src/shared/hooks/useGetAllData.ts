@@ -7,7 +7,7 @@ interface DataProps {
   projects: ProjectGet[],
   tasks: TaskGet[],
   pomodoros: PomodoroRecordGet[],
-  summary: ReportGet[],
+  summary: ReportGet,
 }
 
 const useGetAllData = () => {
@@ -16,7 +16,11 @@ const useGetAllData = () => {
     projects: [],
     tasks: [],
     pomodoros: [],
-    summary: [],
+    summary: {
+      byProject: [],
+      byCategory: [],
+      byTask: [],
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,7 +35,7 @@ const useGetAllData = () => {
       const categories = await invoke<CategoryGet[]>('get_categories');
       const pomodoros = await invoke<PomodoroRecordGet[]>('get_pomodoros');
       const tasks = await invoke<TaskGet[]>('get_tasks');
-      const summary = await invoke<ReportGet[]>('get_summary_report')
+      const summary = await invoke<ReportGet>('get_summary_report')
       
       setData({ categories, summary, projects, tasks, pomodoros });
     } catch (err) {

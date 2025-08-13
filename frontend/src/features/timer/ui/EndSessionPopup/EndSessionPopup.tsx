@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { ProjectGet, Goal, Category } from '@/shared/types';
-import { Task } from '@/shared/types/TaskTypes';
-import Selector from '../Selector/Selector'; // Asegurate de importar el Selector correctamente
-import './EndSessionPopup.module.css';
+import { ProjectGet, GoalGet, CategoryGet, TaskGet } from '@/shared/types';
+import SelectorCreatable from '../Selector/SelectorCreatable';
 
 type EndSessionPopupProps = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (data: {
     project: ProjectGet;
-    goal: Goal;
-    task: Task;
+    goal: GoalGet;
+    task: TaskGet;
+    categoryId: number;
   }) => void;
   projects: ProjectGet[];
-  categories: Category[]; // 🔧 Arreglado el tipo
+  categories: CategoryGet[];
 };
 
 const EndSessionPopup = ({
@@ -25,23 +24,28 @@ const EndSessionPopup = ({
   categories,
 }: EndSessionPopupProps) => {
   const [selectedProject, setSelectedProject] = useState<ProjectGet | null>(null);
-  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<GoalGet | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskGet | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
     if (!isOpen) {
       setSelectedProject(null);
       setSelectedGoal(null);
-      setSelectedCategoryId(0);
       setSelectedTask(null);
+      setSelectedCategoryId(0);
     }
   }, [isOpen]);
 
-  const availableTasks: Task[] =
+  const availableTasks: TaskGet[] =
     selectedProject?.pomodoroRecords
       .map((record) => record.task)
-      .filter((t): t is Task => t !== undefined) ?? [];
+      .filter((t): t is TaskGet => t !== undefined) ?? [];
+
+  const categoryOptions = categories.map(cat => ({
+    value: cat.id,
+    label: cat.name,
+  }));
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -50,88 +54,76 @@ const EndSessionPopup = ({
         <Dialog.Panel className="relative bg-[#2e2e2e] text-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-6">
           <Dialog.Title className="text-xl font-semibold">End session</Dialog.Title>
 
-          {/* Projects */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Projects</label>
-            <select
-              className="w-full bg-[#1f1f1f] text-white rounded p-2"
-              value={selectedProject?.id || ''}
-              onChange={(e) => {
-                const project = projects.find(p => p.id === Number(e.target.value)) || null;
-                setSelectedProject(project);
-                setSelectedGoal(null);
-                setSelectedTask(null);
-              }}
-            >
-              <option value="">Select a project</option>
-              {projects.map((project) => (
-                <option key={project.id} value={project.id}>
-                  {project.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SelectorCreatable
+            label="Projects"
+            items={projects}
+            defaultId={selectedProject?.id || 0}
+            onChange={(id) => {
+              const project = projects.find(p => p.id === id) || null;
+              setSelectedProject(project);
+              setSelectedGoal(null);
+              setSelectedTask(null);
+            }}
+            creatable={false}
+          />
 
-          {/* Goals */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Goals</label>
-            <select
-              className="w-full bg-[#1f1f1f] text-white rounded p-2"
-              value={selectedGoal?.id || ''}
-              onChange={(e) => {
-                const goal = selectedProject?.goals?.find(g => g.id === Number(e.target.value)) || null;
-                setSelectedGoal(goal);
-                setSelectedTask(null);
-              }}
-              disabled={!selectedProject}
-            >
-              <option value="">Select a goal</option>
-              {selectedProject?.goals?.map((goal) => (
-                <option key={goal.id} value={goal.id}>
-                  {goal.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Task - con Selector */}
-          {availableTasks.length > 0 && (
-            <Selector
-              label="Task"
-              items={availableTasks}
-              defaultId={selectedTask?.id}
-              onChange={(id) => {
-                const task = availableTasks.find((t) => t.id === id) || null;
-                setSelectedTask(task);
-              }}
-            />
-          )}
-
-          {/* Category - con Selector */}
-          <Selector
-            label="Type of Work"
-            items={categories}
+          <SelectorCreatable
+            label="Area of work"
+            items={categoryOptions.map(opt => ({
+              id: opt.value,
+              name: opt.label,
+            }))}
             defaultId={selectedCategoryId}
             onChange={(id) => setSelectedCategoryId(id)}
           />
 
-          {/* Botones */}
+          <SelectorCreatable
+            label="Goal"
+            items={selectedProject?.goals || []}
+            defaultId={selectedGoal?.id || 0}
+            mapItem={(goal) => ({
+              value: goal.id,
+              label: goal.title
+            })}
+            onChange={(id) => {
+              const goal = selectedProject?.goals?.find(g => g.id === id) || null;
+              setSelectedGoal(goal);
+              setSelectedTask(null);
+            }}
+            creatable={false}
+          />
+
+          <SelectorCreatable
+            label="Task"
+            items={availableTasks}
+            defaultId={selectedTask?.id || 0}
+            mapItem={(task) => ({
+              value: task.id,
+              label: task.name
+            })}
+            onChange={(id) => {
+              const task = availableTasks.find(t => t.id === id) || null;
+              setSelectedTask(task);
+            }}
+          />
+
           <div className="flex justify-end gap-4 mt-4">
             <button
-              className="px-4 py-2 bg-gray-600 text-white rounded hover:border-2 hover:border-b-neutral-50 hover:bg-gray-500"
+              className="px-4 py-2 bg-gray-600 rounded text-white hover:border-2 hover:border-b-neutral-50 hover:bg-gray-500"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className="px-4 py-2 bg-white text-white rounded hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!selectedProject || !selectedGoal || !selectedTask}
+              className="px-4 py-2 bg-white rounded text-black hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!selectedProject || !selectedGoal || !selectedTask || !selectedCategoryId}
               onClick={() => {
-                if (selectedProject && selectedGoal && selectedTask) {
+                if (selectedProject && selectedGoal && selectedTask && selectedCategoryId) {
                   onConfirm({
                     project: selectedProject,
                     goal: selectedGoal,
                     task: selectedTask,
+                    categoryId: selectedCategoryId,
                   });
                   onClose();
                 }

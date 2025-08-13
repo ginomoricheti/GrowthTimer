@@ -85,7 +85,7 @@ const MainChart = ({ data = [] }: MainChartProps) => {
   };
 
   return (
-    <div className={styles.mainChartBox} style={{ backgroundColor: '#242424', height: 400, padding: 20 }}>
+    <div className={styles.mainChartBox} style={{ height: 400, padding: 20 }}>
       <Bar key={data.length} data={chartData} options={options} />
     </div>
   );

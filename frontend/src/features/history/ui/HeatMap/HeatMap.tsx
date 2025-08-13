@@ -1,9 +1,15 @@
 import './HeatMap.css'
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { PomodoroRecordGet } from '@/shared/types';
 import React from 'react';
 
-const HeatMap = () => {
+interface HeatMapProps {
+  data: PomodoroRecordGet[],
+}
+
+const HeatMap = ({ data }: HeatMapProps) => {
+  console.log(data);
+
   const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredDay, setHoveredDay] = useState<any>(null);
@@ -14,78 +20,25 @@ const HeatMap = () => {
     content: string;
   }>({ visible: false, x: 0, y: 0, content: '' });
 
-  console.log(tooltip)
-
-  // New state for modal
+  // State for modal
   const [modal, setModal] = useState<{
     visible: boolean;
-    data: PomodoroRecordGet & { date: string } | null;
+    data: PomodoroRecordGet | null;
   }>({ visible: false, data: null });
 
-  let hoverTimeout: ReturnType<typeof setTimeout>;
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showHeatMap = () => {
-    clearTimeout(hoverTimeout);
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
     setIsVisible(true);
   };
 
   const hideHeatMap = () => {
-    hoverTimeout = setTimeout(() => setIsVisible(false), 100);
+    hoverTimeoutRef.current = setTimeout(() => setIsVisible(false), 100);
   };
-
-  // Heatmap data
-  const dataset: PomodoroRecordGet[] = [
-    {
-      date: "2025-01-15",
-      minutes: 100,
-      project: "English",
-      task: {
-        name: "Prueba",
-        id: 1,
-        totalTimeMinutes: 10
-      }
-    },
-    {
-      date: "2025-01-15",
-      minutes: 100,
-      project: "English",
-      task: {
-        name: "Prueba",
-        id: 1,
-        totalTimeMinutes: 10
-      }
-    },
-    {
-      date: "2025-01-15",
-      minutes: 100,
-      project: "English",
-      task: {
-        name: "Prueba",
-        id: 1,
-        totalTimeMinutes: 10
-      }
-    },
-    {
-      date: "2025-01-15",
-      minutes: 100,
-      project: "English",
-      task: {
-        name: "Prueba",
-        id: 1,
-        totalTimeMinutes: 10
-      }
-    },
-    {
-      date: "2025-01-15",
-      minutes: 100,
-      project: "English",
-      task: {
-        name: "Prueba",
-        id: 1,
-        totalTimeMinutes: 10
-      }
-    },
-  ];
 
   // Heatmap Config - Reduced height
   const config = {
@@ -117,9 +70,9 @@ const HeatMap = () => {
   };
 
   // Function to format date
-  const formatDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { 
+  const formatDate = (date: Date | string): string => {
+    const dateObj = date instanceof Date ? date : new Date(date);
+    return dateObj.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
@@ -137,9 +90,30 @@ const HeatMap = () => {
   };
 
   // Generate data for all days of the year
-  const generateYearData = useCallback(() => {
-    const dataMap = new Map(dataset.map(d => [d.date, d]));
-    const allDates: (PomodoroRecordGet & { date: string; x: number; y: number })[] = [];
+  const generateYearData  = useMemo(() => {
+    // 1. Agrupar por fecha y sumar minutos
+    const dailySummary = new Map();
+    
+    data.forEach(d => {
+      // Extraer solo la fecha (sin hora)
+      const dateStr = d.date instanceof Date 
+        ? d.date.toISOString().slice(0, 10) 
+        : d.date.split(' ')[0];
+      
+      if (dailySummary.has(dateStr)) {
+        const existing = dailySummary.get(dateStr);
+        existing.minutes += d.minutes;
+      } else {
+        dailySummary.set(dateStr, {
+          date: dateStr,
+          minutes: d.minutes,
+          project: d.project,
+          task: d.task
+        });
+      }
+    });
+    
+    const allDates = [];
 
     for (let m = 0; m < 12; m++) {
       const start = new Date(config.year, m, 1);
@@ -147,13 +121,12 @@ const HeatMap = () => {
       
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const dateStr = d.toISOString().slice(0, 10);
-        const entry = dataMap.get(dateStr);
+        const entry = dailySummary.get(dateStr);
         
-        // Calculate position in grid with spacing
         const month = d.getMonth();
         const week = Math.floor((d.getDate() + new Date(d.getFullYear(), month, 1).getDay() - 1) / 7);
-        const x = 25 + month * 7 * (config.box + config.spacing) + week * (config.box + config.spacing);  // Reduced from 30 to 25
-        const y = 20 + d.getDay() * (config.box + config.spacing);  // Reduced from 30 to 20
+        const x = 25 + month * 7 * (config.box + config.spacing) + week * (config.box + config.spacing);
+        const y = 20 + d.getDay() * (config.box + config.spacing);
 
         allDates.push({
           date: dateStr,
@@ -165,9 +138,9 @@ const HeatMap = () => {
         });
       }
     }
-
+    
     return allDates;
-  }, [dataset]);
+  }, [data]);
 
   // Draw square with effects
   const drawSquare = (ctx: CanvasRenderingContext2D, x: number, y: number, color: string, isHovered: boolean = false) => {
@@ -260,7 +233,7 @@ const HeatMap = () => {
     });
 
     // Draw heatmap squares
-    const yearData = generateYearData();
+    const yearData = generateYearData;
     
     yearData.forEach(day => {
       const isHovered = hoveredDay && hoveredDay.date === day.date;
@@ -302,7 +275,7 @@ const HeatMap = () => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const yearData = generateYearData();
+    const yearData = generateYearData;
     const clickedDay = yearData.find(day => 
       x >= day.x && x <= day.x + config.box &&
       y >= day.y && y <= day.y + config.box
@@ -325,7 +298,7 @@ const HeatMap = () => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const yearData = generateYearData();
+    const yearData = generateYearData;
     const newHoveredDay = yearData.find(day => 
       x >= day.x && x <= day.x + config.box &&
       y >= day.y && y <= day.y + config.box
@@ -340,7 +313,7 @@ const HeatMap = () => {
           visible: true,
           x: e.clientX,
           y: e.clientY,
-          content: `${newHoveredDay.date}\nProject: ${newHoveredDay.project}\nTask: ${newHoveredDay.task}\nTime: ${newHoveredDay.minutes} min`
+          content: `${newHoveredDay.date}\nProject: ${newHoveredDay.project}\nTask: ${newHoveredDay.task?.name || 'No task'}\nTime: ${newHoveredDay.minutes} min`
         });
       } else {
         canvas.style.cursor = 'default';
@@ -369,6 +342,14 @@ const HeatMap = () => {
       drawHeatMap();
     }
   }, [isVisible, drawHeatMap, hoveredDay]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -532,7 +513,7 @@ const HeatMap = () => {
                   </div>
 
                   <div style={{ marginBottom: '12px' }}>
-                    <strong style={{ color: '#ffffff' }}>Task Category:</strong>
+                    <strong style={{ color: '#ffffff' }}>Task:</strong>
                     <span style={{ marginLeft: '8px', color: '#888888' }}>
                       {modal.data.task?.name}
                     </span>

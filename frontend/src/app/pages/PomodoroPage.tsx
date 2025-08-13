@@ -9,21 +9,14 @@ import useGetAllData from "@/shared/hooks/useGetAllData";
 
 const PomodoroPage = () => {
   const [showSecondPage, setShowSecondPage] = useState(false);
-  const { data, fetchAllData, loading, error } = useGetAllData();
+  const { data, fetchAllData } = useGetAllData();
 
   useEffect(() => {
     fetchAllData();
   }, []);
-  
-  console.log(data.categories)
-  console.log(data.tasks)
-  console.log(data.projects)
-  console.log(data.summary)
+
   console.log(data.pomodoros)
-
-  console.log(loading)
-  console.log(error)
-
+  
   return (
     <div className={styles.viewport}>
       <div
@@ -34,7 +27,12 @@ const PomodoroPage = () => {
       >
         {/* First view (Pomodoro) */}
         <div className={styles.page}>
-          <CountdownTimer />
+          <CountdownTimer
+            categories = {data.categories}
+            tasks = {data.tasks}
+            projects = {data.projects}
+            pomodoros = {data.pomodoros}
+          />
           <button onClick={() => setShowSecondPage(true)} className={`${styles.navButton} ${styles.rightButton}`}>
             <FontAwesomeIcon icon={faAnglesRight} />
           </button>
