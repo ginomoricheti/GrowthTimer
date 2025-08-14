@@ -25,3 +25,14 @@ pub fn insert_pomodoro(db: &mut Database, pomodoro: &PomodoroCreate) -> Result<(
   
   Ok(())
 }
+
+pub fn delete_pomodoro(db: &mut Database, pomodoro_id: i32 ) -> Result<(), rusqlite::Error> {
+  let conn = db.get_conn();
+
+  conn.execute(
+    "DELETE FROM pomodoros WHERE id = ?1",
+    params![pomodoro_id],
+  )?;
+
+  Ok(())
+}

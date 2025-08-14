@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
@@ -15,6 +16,7 @@ type SelectorCreatableProps<T> = {
   onChange: (selectedId: number, createdLabel?: string) => void;
   mapItem?: (item: T) => OptionType;
   creatable?: boolean;
+  isDisabled?: boolean;
 };
 
 function SelectorCreatable<T>({
@@ -24,6 +26,7 @@ function SelectorCreatable<T>({
   onChange,
   mapItem,
   creatable = true,
+  isDisabled = false,
 }: SelectorCreatableProps<T>) {
   const options: OptionType[] = items.map(item =>
     mapItem
@@ -61,7 +64,8 @@ function SelectorCreatable<T>({
   const customStyles = {
     control: (styles: any) => ({ ...styles, backgroundColor: '#1f1f1f', color: 'white' }),
     singleValue: (styles: any) => ({ ...styles, color: 'white' }),
-    menu: (styles: any) => ({ ...styles, backgroundColor: '#2e2e2e' }),
+    menu: (styles: any) => ({ ...styles, backgroundColor: '#2e2e2e', zIndex: 9999 }),
+    menuPortal: (styles: any) => ({ ...styles, zIndex: 9999 }), // <--- importante
     option: (styles: any, { isFocused }: any) => ({
       ...styles,
       backgroundColor: isFocused ? '#3a3a3a' : '#2e2e2e',
@@ -75,6 +79,7 @@ function SelectorCreatable<T>({
     <div>
       <label className="block mb-1 text-sm font-medium text-white">{label}</label>
       <SelectComponent
+        isDisabled={isDisabled}
         isClearable
         options={options}
         value={selectedOption}
@@ -83,6 +88,7 @@ function SelectorCreatable<T>({
         placeholder={creatable
           ? `Select or create ${label.toLowerCase()}`
           : `Select ${label.toLowerCase()}`}
+        menuPortalTarget={document.body}
       />
     </div>
   );

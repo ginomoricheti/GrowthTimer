@@ -26,6 +26,9 @@ fn main() {
             commands::create_project,
             commands::create_goal,
             commands::create_pomodoro,
+            commands::delete_project,
+            commands::delete_goal,
+            commands::delete_pomodoro,
             commands::get_summary_report,
         ])
         .setup(|app| {

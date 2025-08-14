@@ -3,7 +3,7 @@ import styles from "./CustomSidebar.module.css";
 import { faBook, faFolder, faBullseye, faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import SidebarMenuItem from "./SidebarMenuItem/SidebarMenuItem";
+import SidebarMenuItem from "../SidebarMenuItem/SidebarMenuItem";
 import { faGithub, faReddit } from '@fortawesome/free-brands-svg-icons';
 import { openUrl } from '@tauri-apps/plugin-opener';
 

@@ -19,3 +19,14 @@ pub fn insert_goal(db: &mut Database, goal: &GoalCreate) -> Result<(), rusqlite:
 
   Ok(())
 }
+
+pub fn delete_goal(db: &mut Database, goal_id: i32) -> Result<(), rusqlite::Error> {
+  let conn = db.get_conn();
+
+  conn.execute(
+    "DELETE FROM goals WHERE id = ?1",
+    params![goal_id],
+  )?;
+
+  Ok(())
+}

@@ -6,7 +6,7 @@ import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import Card from "@/features/slider/ui/Card/Card";
 import { Graphs } from "@/features/graphs/Graphs";
 import useGetAllData from "@/shared/hooks/useGetAllData";
-import CustomSidebar from "@/features/sidebar/CustomSidebar";
+import CustomSidebar from "@/features/sidebar/ui/CustomSidebar/CustomSidebar";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const PomodoroPage = () => {

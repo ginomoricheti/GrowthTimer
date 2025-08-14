@@ -24,4 +24,15 @@ pub fn insert_project(db: &mut Database, project: &ProjectCreate) -> Result<(), 
   )?;
   
   Ok(())
-} 
+}
+
+pub fn delete_project(db: &mut Database, project_id: i32 ) -> Result<(), rusqlite::Error> {
+  let conn = db.get_conn();
+
+  conn.execute(
+    "DELETE FROM projects WHERE id = ?1",
+    params![project_id],
+  )?;
+
+  Ok(())
+}

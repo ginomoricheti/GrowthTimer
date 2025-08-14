@@ -7,6 +7,8 @@ import usePomodoroTimer from '../../hooks/usePomodoroTimer';
 import EndSessionPopup from '../EndSessionPopup/EndSessionPopup';
 import HeatMap from '../../../history/ui/HeatMap/HeatMap';
 import { CategoryGet, ProjectGet, TaskGet, PomodoroRecordGet } from '@/shared/types';
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { invoke } from '@tauri-apps/api/core';
 
 interface CountdownTimerProps {
   categories: CategoryGet[],
@@ -76,17 +78,17 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
             onClick={start}
             disabled={isActive}
           >
-            <FontAwesomeIcon icon={faPlay} />
+            <FontAwesomeIcon icon={faPlay as unknown as IconProp} />
           </button>
           <button
             className={`${!isActive ? styles.inactiveButton : styles.stop}`}
             onClick={stop}
             disabled={!isActive}
           >
-            <FontAwesomeIcon icon={faPause} />
+            <FontAwesomeIcon icon={faPause as unknown as IconProp} />
           </button>
           <button className={styles.reset} onClick={reset}>
-            <FontAwesomeIcon icon={faRotateRight} />
+            <FontAwesomeIcon icon={faRotateRight as unknown as IconProp} />
           </button>
         </div>
         <button className={styles.offButton} onClick={() => {
@@ -99,23 +101,29 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
         <EndSessionPopup
           isOpen={isPopupOpen}
           onClose={() => setIsPopupOpen(false)}
-          onConfirm={({ project, goal, task }) => {
+          onConfirm={async ({ project, goal, task }) => {
             if (workedSeconds <= 0) {
               toast.error('No hubo tiempo trabajado');
               reset();
               return;
             }
 
-            const category = project.categoryName;
+            const workedMinutes = Math.floor(workedSeconds / 60);
 
-            console.log('Al backend voy a mandar:');
-            console.log('Proyecto: ', project);
-            console.log('Objetivo: ', goal);
-            console.log('Tarea: ', task);
-            console.log('Categoria: ', category);
-            console.log('Segundos trabajados: ', workedSeconds);
-            
-            // BACKEND CALL HERE OR CUSTOMHOOKCALL;
+            try {
+              await invoke('create_pomodoro', {
+                pomodoro: {
+                  minutes: workedMinutes,
+                  idProject: project.id,
+                  idTask: Number(task),
+                  idGoal: goal.id,
+                }
+              });
+              toast.success('Pomodoro guardado correctamente');
+            } catch (error) {
+              console.error('Error creando pomodoro:', error);
+              toast.error('Error guardando el pomodoro');
+            }
 
             reset();
             setIsPopupOpen(false);

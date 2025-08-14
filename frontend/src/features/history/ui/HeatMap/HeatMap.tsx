@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import './HeatMap.css'
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { PomodoroRecordGet } from '@/shared/types';
@@ -13,12 +14,6 @@ const HeatMap = ({ data }: HeatMapProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredDay, setHoveredDay] = useState<any>(null);
-  const [tooltip, setTooltip] = useState<{
-    visible: boolean;
-    x: number;
-    y: number;
-    content: string;
-  }>({ visible: false, x: 0, y: 0, content: '' });
 
   // State for modal
   const [modal, setModal] = useState<{
@@ -309,22 +304,14 @@ const HeatMap = ({ data }: HeatMapProps) => {
       
       if (newHoveredDay) {
         canvas.style.cursor = 'pointer';
-        setTooltip({
-          visible: true,
-          x: e.clientX,
-          y: e.clientY,
-          content: `${newHoveredDay.date}\nProject: ${newHoveredDay.project}\nTask: ${newHoveredDay.task?.name || 'No task'}\nTime: ${newHoveredDay.minutes} min`
-        });
       } else {
         canvas.style.cursor = 'default';
-        setTooltip(prev => ({ ...prev, visible: false }));
       }
     }
   }, [generateYearData, hoveredDay]);
 
   const handleMouseLeave = useCallback(() => {
     setHoveredDay(null);
-    setTooltip(prev => ({ ...prev, visible: false }));
     if (canvasRef.current) {
       canvasRef.current.style.cursor = 'default';
     }
@@ -381,16 +368,7 @@ const HeatMap = ({ data }: HeatMapProps) => {
             display: 'block',
             borderRadius: '8px'
           }}
-        />
-        
-        {/* Tooltip
-        {tooltip.visible && (
-          <div
-            className='.custom-tooltip'
-          >
-            {tooltip.content}
-          </div>
-        )} */}
+          />
       </div>
 
       {/* Informational modal */}
@@ -484,12 +462,12 @@ const HeatMap = ({ data }: HeatMapProps) => {
                   color: '#888888',
                   fontSize: '14px'
                 }}>
-                  {modal.data.date}
+                  {modal.data.date.toLocaleString()}
                 </div>
               </div>
 
               {modal.data.minutes > 0 ? (
-                <div style={{ space: '16px' }}>
+                <div>
                   <div style={{ 
                     display: 'flex',
                     justifyContent: 'center', 

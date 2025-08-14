@@ -21,3 +21,15 @@ pub fn create_pomodoro(
 
     Ok(())
 }
+
+#[tauri::command]
+pub fn delete_pomodoro(
+    db: State<'_, Arc<Mutex<Database>>>,
+    pomodoro_id: i32,
+) -> Result<(), String> {
+    let mut db = db.lock().map_err(|_| "Error locking DB")?;
+    pomodoro_service::delete_pomodoro(&mut db, pomodoro_id)
+        .map_err(|e| format!("Failed to delete pomodoro: {}", e))?;
+
+    Ok(())
+}
