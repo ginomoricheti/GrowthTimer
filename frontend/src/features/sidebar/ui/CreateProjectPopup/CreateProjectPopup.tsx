@@ -1,3 +1,4 @@
+import "./CreateProjectPopup.css"
 import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { useProjects } from '@/shared/context/ProjectsContext';
@@ -5,7 +6,7 @@ import { useCategories } from '@/shared/context/CategoryContext';
 
 const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { createProject } = useProjects();
-  const { categories } = useCategories(); // obtenemos las categorías desde el context
+  const { categories } = useCategories();
   
   const [name, setName] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
@@ -41,7 +42,6 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         <Dialog.Panel className="relative bg-[#2e2e2e] text-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-6">
           <Dialog.Title className="text-xl font-semibold">Create Project</Dialog.Title>
 
-          {/* Nombre del proyecto */}
           <div>
             <label className="block mb-1 text-sm font-medium text-white">Project Name</label>
             <input
@@ -49,17 +49,16 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter project name..."
-              className="w-full rounded p-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded p-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
             />
           </div>
 
-          {/* Categoría */}
           <div>
             <label className="block mb-1 text-sm font-medium text-white">Category</label>
             <select
               value={selectedCategoryId}
               onChange={(e) => setSelectedCategoryId(Number(e.target.value))}
-              className="w-full rounded p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
             >
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id} className="bg-gray-700 text-white">
@@ -69,16 +68,16 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             </select>
           </div>
 
-          {/* Color del proyecto */}
           <div>
             <label className="block mb-2 text-sm font-medium text-white">Project Color</label>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <input
+                  id="inputColor"
                   type="color"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
-                  className="w-12 h-8 rounded border-2 border-gray-600 bg-transparent cursor-pointer"
+                  className="w-6 h-6 rounded border-0 bg-transparent cursor-pointer"
                 />
                 <span className="text-sm text-gray-300">Custom color: {color}</span>
               </div>
@@ -88,7 +87,7 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                     key={presetColor}
                     type="button"
                     onClick={() => setColor(presetColor)}
-                    className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                    className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 appearance-none outline-none ${
                       color === presetColor 
                         ? 'border-white shadow-lg scale-110' 
                         : 'border-gray-600 hover:border-gray-400'
@@ -100,16 +99,6 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               </div>
             </div>
           </div>
-
-
-          {/* Vista previa del color */}
-          <div className="bg-gray-800 p-3 rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded-full border border-gray-600" style={{ backgroundColor: color }} />
-              <span className="text-sm text-gray-300">Preview: {name || 'Project Name'}</span>
-            </div>
-          </div>
-
           {/* Botones */}
           <div className="flex justify-end gap-4 mt-4">
             <button

@@ -17,7 +17,7 @@ export const ProjectsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const { data, fetchAllData } = useGetAllData();
   const [projects, setProjects] = useState<ProjectGet[]>([]);
 
-  // Mantener projects sincronizado con data.projects
+  // Sincronize with data.projects
   useEffect(() => {
     setProjects(data.projects);
   }, [data.projects]);
@@ -29,7 +29,7 @@ export const ProjectsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const createProject = useCallback(async (project: ProjectPost) => {
     try {
       await invoke('create_project', { project });
-      await fetchProjects(); // Refresca los proyectos
+      await fetchProjects();
     } catch (error) {
       console.error('Error creating project:', error);
     }
@@ -38,7 +38,7 @@ export const ProjectsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const deleteProject = useCallback(async (projectId: number) => {
     try {
       await invoke('delete_project', { projectId });
-      await fetchProjects(); // Refresca los proyectos
+      await fetchProjects();
     } catch (error) {
       console.error('Error deleting project:', error);
     }

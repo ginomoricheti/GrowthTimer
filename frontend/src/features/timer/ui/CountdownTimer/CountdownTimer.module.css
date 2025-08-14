@@ -109,3 +109,11 @@
 .currentTimeDetails span {
   font-weight: 600;
 }
+
+.settingsButton {
+  position: absolute;
+  background: none;
+  font-size: 20px;
+  bottom: 1.5%;
+  right: 0.5%;
+}

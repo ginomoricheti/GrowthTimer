@@ -27,7 +27,7 @@ export const GoalsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const createGoal = useCallback(async (goal: GoalPost) => {
     try {
       await invoke('create_goal', { goal });
-      await fetchGoals(); // refresca la lista
+      await fetchGoals();
     } catch (error) {
       console.error('Error creating goal:', error);
     }

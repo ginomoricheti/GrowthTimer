@@ -67,31 +67,31 @@ pub fn create_schema(conn: &Connection) -> Result<()> {
 
         INSERT OR IGNORE INTO categories (id, name, color) VALUES 
             (1, 'Personal', '#10B981'),
-            (2, 'Trabajo', '#3B82F6'),
-            (3, 'Salud', '#EF4444'),
-            (4, 'Estudios', '#8B5CF6'),
-            (5, 'Finanzas', '#F59E0B'),
-            (6, 'Hogar', '#06B6D4'),
-            (7, 'Creatividad', '#EC4899'),
-            (8, 'Relaciones', '#84CC16'),
+            (2, 'Work', '#3B82F6'),
+            (3, 'Health', '#EF4444'),
+            (4, 'Studies', '#8B5CF6'),
+            (5, 'Finances', '#F59E0B'),
+            (6, 'Home', '#06B6D4'),
+            (7, 'Creativity', '#EC4899'),
+            (8, 'Relationships', '#84CC16'),
             (9, 'Fitness', '#F97316'),
             (10, 'Hobbies', '#6366F1');
 
         INSERT OR IGNORE INTO tasks (id, name, color) VALUES 
-            (1, 'Leer', '#10B981'),
-            (2, 'Estudiar', '#8B5CF6'),
-            (3, 'Practicar', '#F59E0B'),
-            (4, 'Debuguear', '#EF4444'),
-            (5, 'Planificar', '#3B82F6'),
-            (6, 'Investigar', '#06B6D4'),
-            (7, 'Documentar', '#84CC16'),
-            (8, 'Revisar', '#F97316'),
-            (9, 'Refactorizar', '#EC4899'),
-            (10, 'Diseñar', '#6366F1'),
-            (11, 'Meditar', '#10B981'),
-            (12, 'Ejercitar', '#EF4444'),
-            (13, 'Cocinar', '#F59E0B'),
-            (14, 'Organizar', '#06B6D4');
+            (1, 'Read', '#10B981'),
+            (2, 'Study', '#8B5CF6'),
+            (3, 'Practice', '#F59E0B'),
+            (4, 'Debug', '#EF4444'),
+            (5, 'Plan', '#3B82F6'),
+            (6, 'Research', '#06B6D4'),
+            (7, 'Document', '#84CC16'),
+            (8, 'Review', '#F97316'),
+            (9, 'Refactor', '#EC4899'),
+            (10, 'Design', '#6366F1'),
+            (11, 'Meditate', '#10B981'),
+            (12, 'Exercise', '#EF4444'),
+            (13, 'Cook', '#F59E0B'),
+            (14, 'Organize', '#06B6D4');
     "#;
 
     conn.execute_batch(qry)?;

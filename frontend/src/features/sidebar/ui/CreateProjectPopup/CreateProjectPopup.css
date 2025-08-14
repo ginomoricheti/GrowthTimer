@@ -1,0 +1,22 @@
+input,
+select {
+  background-color: #242424;
+  color: white;
+  border: 1px solid lightgray;
+  border-radius: 0.5rem;
+}
+
+input::placeholder{
+  color: lightgray;
+}
+
+#inputColor {
+  border: none;
+}
+
+/* Autofill */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #374151 inset;
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}

@@ -16,7 +16,7 @@ const CreateGoalPopup = ({ isOpen, onClose }: CreateGoalPopupProps) => {
   const [targetHours, setTargetHours] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
-  // Resetear campos cuando se abre o cierra el popup
+  // Reset fields on open/close popup
   useEffect(() => {
     if (!isOpen) {
       setTitle('');
@@ -25,14 +25,12 @@ const CreateGoalPopup = ({ isOpen, onClose }: CreateGoalPopupProps) => {
     }
   }, [isOpen, projects]);
 
-  // Inicializar selectedProjectId cuando se cargan los proyectos por primera vez
   useEffect(() => {
     if (projects.length > 0 && selectedProjectId === null) {
       setSelectedProjectId(projects[0].id);
     }
   }, [projects, selectedProjectId]);
 
-  // Cargar proyectos si aún no están
   useEffect(() => {
     if (projects.length === 0) {
       setLoading(true);
@@ -59,28 +57,28 @@ const CreateGoalPopup = ({ isOpen, onClose }: CreateGoalPopupProps) => {
         <Dialog.Panel className="relative bg-[#2e2e2e] text-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-6">
           <Dialog.Title className="text-xl font-semibold">Create Goal</Dialog.Title>
 
-          {/* Título */}
+          {/* Title */}
           <div>
             <label className="block mb-1 text-sm font-medium text-white">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full rounded p-2  text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
             />
           </div>
 
-          {/* Proyecto */}
+          {/* Project */}
           <div>
             <label className="block mb-1 text-sm font-medium text-white">Project</label>
             <select
               value={selectedProjectId ?? ''}
               onChange={(e) => setSelectedProjectId(Number(e.target.value))}
               disabled={loading || projects.length === 0}
-              className="w-full rounded p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full rounded p-2  text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
             >
               {projects.map((p) => (
-                <option key={p.id} value={p.id} className="bg-gray-700 text-white">
+                <option key={p.id} value={p.id} className=" text-white">
                   {p.name}
                 </option>
               ))}
@@ -94,13 +92,13 @@ const CreateGoalPopup = ({ isOpen, onClose }: CreateGoalPopupProps) => {
               type="number"
               value={targetHours}
               onChange={(e) => setTargetHours(Number(e.target.value))}
-              className="w-full rounded p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full rounded p-2  text-white focus:outline-none focus:ring-2 focus:ring-gray-300"
               min={0}
               step={0.1}
             />
           </div>
 
-          {/* Botones */}
+          {/* Buttons */}
           <div className="flex justify-end gap-4 mt-4">
             <button
               className="px-4 py-2 bg-gray-600 rounded text-white hover:bg-gray-500"

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "./CustomSidebar.module.css";
-import { faBook, faFolder, faBullseye, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faFolder, faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import SidebarMenuItem from "../SidebarMenuItem/SidebarMenuItem";
@@ -24,7 +24,7 @@ const CustomSidebar = () => {
     try {
       await openUrl(url);
     } catch (error) {
-      console.error("No se pudo abrir el enlace:", error);
+      console.error("The link could not be opened:", error);
     }
   };
 
@@ -65,9 +65,6 @@ const CustomSidebar = () => {
         </div>
         <div onClick={() => openLink("https://www.reddit.com/user/Thought_Trick/")} className={styles.footerIcon}>
           <FontAwesomeIcon icon={faReddit as unknown as IconProp} />
-        </div>
-        <div onClick={() => openLink("https://github.com/ginomoricheti")} className={styles.footerIcon}>
-          <FontAwesomeIcon icon={faGear as unknown as IconProp} />
         </div>
       </div>
     </div>

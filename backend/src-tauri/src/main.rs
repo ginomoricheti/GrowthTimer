@@ -60,18 +60,6 @@ fn main() {
                 }
             }
 
-            // TEST POMODORO REPORT
-            match analytics::summary_report::generate_summary_report(&mut database) {
-                Ok(report) => {
-                    match serde_json::to_string_pretty(&report) {
-                        Ok(json_str) => println!("Pomodoro report (JSON):\n{}", json_str),
-                        Err(e) => eprintln!("Error serializando json para print: {}", e),
-                    }
-                }
-                Err(e) => {
-                    eprintln!("Error generando reporte de pomodoros de prueba: {}", e);
-                }
-            }
             // 4. Share connection
             let database = Arc::new(Mutex::new(database));
             app.manage(database);

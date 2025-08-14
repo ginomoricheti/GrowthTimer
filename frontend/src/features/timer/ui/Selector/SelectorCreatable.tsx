@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
@@ -44,7 +44,6 @@ function SelectorCreatable<T>({
     setSelectedOption(found || null);
   }, [defaultId, items]);
 
-  // Manejar cambio de selección
   const handleChange = (newValue: any, actionMeta: any) => {
     if (!newValue) {
       setSelectedOption(null);

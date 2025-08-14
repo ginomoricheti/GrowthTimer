@@ -86,11 +86,11 @@ const HeatMap = ({ data }: HeatMapProps) => {
 
   // Generate data for all days of the year
   const generateYearData  = useMemo(() => {
-    // 1. Agrupar por fecha y sumar minutos
+    // 1. Group by date and add minutes
     const dailySummary = new Map();
     
     data.forEach(d => {
-      // Extraer solo la fecha (sin hora)
+      // Extract date without hour
       const dateStr = d.date instanceof Date 
         ? d.date.toISOString().slice(0, 10) 
         : d.date.split(' ')[0];

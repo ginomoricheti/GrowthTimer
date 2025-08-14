@@ -1,10 +1,11 @@
 import styles from './CountdownTimer.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPause, faPlay, faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faPause, faPlay, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import usePomodoroTimer from '../../hooks/usePomodoroTimer';
 import EndSessionPopup from '../EndSessionPopup/EndSessionPopup';
+import SettingsPopup from '../SettingsPopup/SettingsPopup';
 import HeatMap from '../../../history/ui/HeatMap/HeatMap';
 import { CategoryGet, ProjectGet, TaskGet, PomodoroRecordGet } from '@/shared/types';
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -19,9 +20,10 @@ interface CountdownTimerProps {
 
 const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTimerProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isSettingsPopupOpen, setIsSettingsPopupOpen] = useState(false);
 
-  const workTime = 65;
-  const breakTime = 10;
+  const [workTime, setWorkTime] = useState(25*60);
+  const [breakTime, setBreakTime] = useState(5*60);
   
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'long' });
@@ -63,6 +65,20 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
 
   const formattedWorkedTime = `${hours}h ${minutes}m`;
 
+  const handleSettingsSave = (newWorkTime: number, newBreakTime: number) => {
+    setWorkTime(newWorkTime * 60);
+    setBreakTime(newBreakTime * 60);
+    
+    if (isActive) {
+      stop();
+      reset();
+      toast.info(`Settings update: ${newWorkTime}m work, ${newBreakTime}m break`);
+    } else {
+      reset();
+      toast.success(`Settings update: ${newWorkTime}m work, ${newBreakTime}m break`);
+    }
+  };
+
   return (
     <>
       <div className={styles.timerBox}>
@@ -103,7 +119,7 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
           onClose={() => setIsPopupOpen(false)}
           onConfirm={async ({ project, goal, task }) => {
             if (workedSeconds <= 0) {
-              toast.error('No hubo tiempo trabajado');
+              toast.error('Work time empty');
               reset();
               return;
             }
@@ -119,10 +135,10 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
                   idGoal: goal.id,
                 }
               });
-              toast.success('Pomodoro guardado correctamente');
+              toast.success('Pomodoro save correctly.');
             } catch (error) {
-              console.error('Error creando pomodoro:', error);
-              toast.error('Error guardando el pomodoro');
+              console.error('Error making pomodoro:', error);
+              toast.error('Error saving pomodoro');
             }
 
             reset();
@@ -135,7 +151,21 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
           categories={categories}
           tasks={tasks}
         />
+        
+        {/* SettingsPopup */}
+        <SettingsPopup
+          isOpen={isSettingsPopupOpen}
+          onClose={() => setIsSettingsPopupOpen(false)}
+          onSave={handleSettingsSave}
+          currentWorkTime={workTime/60}
+          currentBreakTime={breakTime/60}
+        />
       </div>
+      <button className={styles.settingsButton} onClick={() => {
+        setIsSettingsPopupOpen(true);
+      }}>
+        <FontAwesomeIcon icon={faGear as unknown as IconProp} />
+      </button>
       <h4 className={styles.currentTimeDetails}>You've been worked for <span>{formattedWorkedTime}</span></h4>
 
       <HeatMap data={pomodoros}/>

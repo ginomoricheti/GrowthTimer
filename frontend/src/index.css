@@ -1,39 +1,49 @@
 @import "tailwindcss";
-/*
+
+/* 
 <weight>: Use a value from 100 to 900
 <uniquifier>: Use a unique and descriptive class name
+
 .lexend-deca-<uniquifier> {
   font-family: "Lexend Deca", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal;
 }
+
 .quicksand-<uniquifier> {
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal;
 } */
+
 /* .montserrat-<uniquifier> {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
-  font-style: normal;
+  font-style: normal; 
 } */
+
 :root {
+
   font-family: "Montserrat", sans-serif;
   line-height: 1.5;
   font-weight: 300;
+
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   transition: background-color 0.5s ease;
   overflow: hidden;
 }
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -42,6 +52,7 @@ a {
 a:hover {
   color: #535bf2;
 }
+
 body {
   margin: 0;
   display: flex;
@@ -51,10 +62,12 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -73,6 +86,7 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -85,6 +99,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
 .p-dropdown-panel {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -93,38 +108,53 @@ button:focus-visible {
   border: none;
   border-radius: 5px;
 }
+
 .p-dropdown-item {
   margin: 10px 0;
   color: #242424;
 }
+
 .p-dropdown-item:first-child {
   margin-top: 0;
 }
+
 .p-dropdown-item:last-child {
   margin-bottom: 0;
 }
+
 .p-dropdown-trigger {
   display: none;
 }
+
 ::-webkit-scrollbar {
-  height: 8px;
+  height: 4px;
   background: transparent;
 }
+
 ::-webkit-scrollbar-track {
+  background: rgb(36, 36, 36, 0.15);
   border-radius: 4px;
-  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #444;
   border-radius: 4px;
   transition: background 0.3s ease;
-  /* Hace que el thumb sea más corto que el track */
-  background-clip: padding-box;
-  border: 2px solid transparent;
-  min-width: 30px;
-  max-width: 30px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
-  background-clip: padding-box;
+}
+
+input:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #374151 inset; /* bg-gray-700 */
+  -webkit-text-fill-color: #fff; /* text-white */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #9ca3af; /* focus:ring-gray-300 equivalente */
 }
