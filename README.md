@@ -2,7 +2,7 @@
 
 *A goal-oriented Pomodoro application to track and achieve your professional learning objectives.*
 
-[![GitHub release](https://img.shields.io/github/v/release/ginomoricheti/GrowthTimer?color=blue&style=flat-square)](https://github.com/ginomoricheti/GrowthTimer/releases/tag/v0.1.0)
+[![GitHub release](https://img.shields.io/github/v/release/ginomoricheti/GrowthTimer?color=blue&style=flat-square)](https://github.com/ginomoricheti/GrowthTimer/releases/latest)
 [![Download for Windows](https://img.shields.io/badge/Download-Windows%20EXE-blue)](https://github.com/ginomoricheti/GrowthTimer/releases/latest/download/app.exe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Issues](https://img.shields.io/github/issues/ginomoricheti/GrowthTimer?style=flat-square&color=red)](https://github.com/ginomoricheti/GrowthTimer/issues)
