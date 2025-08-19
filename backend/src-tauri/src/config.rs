@@ -1,18 +1,20 @@
 use std::path::PathBuf;
 use std::fs;
+use std::env;
 
 pub fn get_db_path() -> PathBuf {
-    // Base folder
-    let base_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent().expect("Cannot get parent dir").to_path_buf();
+    // Ruta del ejecutable actual
+    let exe_path = env::current_exe().expect("Cannot get current exe path");
+    let base_dir = exe_path.parent().expect("Cannot get parent dir of exe");
 
-    // "data" folder inside the backend (one level up)
+    // Carpeta "data" dentro de donde está el exe
     let data_dir = base_dir.join("data");
 
-    // Create if not exist
+    // Crear la carpeta si no existe
     if !data_dir.exists() {
         fs::create_dir_all(&data_dir).expect("Could not create the data directory");
     }
 
-    // Full path
+    // Ruta final de la base de datos
     data_dir.join("database.db")
 }
