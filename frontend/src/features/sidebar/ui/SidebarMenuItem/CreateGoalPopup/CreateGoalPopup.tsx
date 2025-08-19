@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { useGoals } from '@/shared/context/GoalsContext';
-import { useProjects } from '@/shared/context/ProjectsContext';
+import { useGoals, useProjects } from '@/shared/context/ProjectsContext';
 
 type CreateGoalPopupProps = {
   isOpen: boolean;
@@ -107,7 +106,7 @@ const CreateGoalPopup = ({ isOpen, onClose }: CreateGoalPopupProps) => {
               Cancel
             </button>
             <button
-              className="px-4 py-2 bg-white rounded text-black hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-white rounded text-white hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!title || !selectedProjectId || targetHours <= 0 || loading}
               onClick={handleConfirm}
             >

@@ -2,7 +2,7 @@ import "./CreateProjectPopup.css"
 import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { useProjects } from '@/shared/context/ProjectsContext';
-import { useCategories } from '@/shared/context/CategoryContext';
+import { useCategories } from '@/shared/context/CategoriesContext';
 
 const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { createProject } = useProjects();
@@ -69,7 +69,7 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-white">Project Color</label>
+            <label className="block mb-2 text-sm font-medium text-white">Project Color (for the graph section)</label>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <input
@@ -79,7 +79,7 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                   onChange={(e) => setColor(e.target.value)}
                   className="w-6 h-6 rounded border-0 bg-transparent cursor-pointer"
                 />
-                <span className="text-sm text-gray-300">Custom color: {color}</span>
+                <span className="text-sm text-gray-300">Custom color: {color} </span>
               </div>
               <div className="grid grid-cols-6 gap-2">
                 {predefinedColors.map((presetColor) => (
@@ -108,7 +108,7 @@ const CreateProjectPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               Cancel
             </button>
             <button
-              className="px-4 py-2 bg-white rounded text-black hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-white rounded text-white cursor-pointer hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
               disabled={!name.trim() || !selectedCategoryId}
               onClick={handleConfirm}
             >

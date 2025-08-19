@@ -36,7 +36,7 @@ const useGetAllData = () => {
       const pomodoros = await invoke<PomodoroRecordGet[]>('get_pomodoros');
       const tasks = await invoke<TaskGet[]>('get_tasks');
       const summary = await invoke<ReportGet>('get_summary_report');
-      
+
       setData({ categories, summary, projects, tasks, pomodoros });
     } catch (err) {
       console.error('Error fetching data:', err);

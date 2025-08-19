@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { ProjectGet, GoalGet, CategoryGet, TaskGet } from '@/shared/types';
 import SelectorCreatable from '../Selector/SelectorCreatable';
+import { useProjects } from '@/shared/context/ProjectsContext';
 
 type EndSessionPopupProps = {
   isOpen: boolean;
@@ -21,7 +22,6 @@ const EndSessionPopup = ({
   isOpen,
   onClose,
   onConfirm,
-  projects,
   categories,
   tasks,
 }: EndSessionPopupProps) => {
@@ -29,6 +29,7 @@ const EndSessionPopup = ({
   const [selectedGoal, setSelectedGoal] = useState<GoalGet | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const { projects } = useProjects();
 
   useEffect(() => {
     if (!isOpen) {
@@ -38,16 +39,18 @@ const EndSessionPopup = ({
       setSelectedCategoryId(0);
     }
   }, [isOpen]);
-
+  
   const tasksOptions = tasks.map(task => ({
     value: task.id,
     label: task.name,
   }));
-
+  
   const categoryOptions = categories.map(cat => ({
     value: cat.id,
     label: cat.name,
   }));
+  
+  const currentProject = projects.find(p => p.id === selectedProject?.id);
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -59,12 +62,11 @@ const EndSessionPopup = ({
           <SelectorCreatable
             label="Projects"
             items={projects}
-            defaultId={selectedProject?.id || 0}
+            valueId={selectedProject?.id}
             onChange={(id) => {
               const project = projects.find(p => p.id === id) || null;
               setSelectedProject(project);
               setSelectedGoal(null);
-              setSelectedTaskId(0);
             }}
             creatable={false}
           />
@@ -75,22 +77,18 @@ const EndSessionPopup = ({
               id: opt.value,
               name: opt.label,
             }))}
-            defaultId={selectedCategoryId}
+            valueId={selectedCategoryId}
             onChange={(id) => setSelectedCategoryId(id)}
           />
-
+          
           <SelectorCreatable
             label="Goal"
-            items={selectedProject?.goals || []}
-            defaultId={selectedGoal?.id || 0}
-            mapItem={(goal) => ({
-              value: goal.id,
-              label: goal.title
-            })}
-            onChange={(id) => {
-              const goal = selectedProject?.goals?.find(g => g.id === id) || null;
+            items={currentProject?.goals || []}
+            valueId={selectedGoal?.id || 0}  // <--- use 0 si null
+            mapItem={(goal) => ({ value: goal.id, label: goal.title })}
+            onChange={(goalId) => {
+              const goal = currentProject?.goals?.find(g => g.id === goalId) || null;
               setSelectedGoal(goal);
-              setSelectedTaskId(0);
             }}
             creatable={false}
           />
@@ -101,7 +99,7 @@ const EndSessionPopup = ({
               id: opt.value,
               name: opt.label,
             }))}
-            defaultId={selectedTaskId}
+            valueId={selectedTaskId}
             onChange={(id) => setSelectedTaskId(id)}
           />
 
