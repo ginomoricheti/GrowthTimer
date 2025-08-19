@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import sound from '@/assets/sounds/sound_6.mp3'
+import sound from '@/assets/sounds/sound_6.mp3';
 
 type usePomodoroTimerProps = {
   workTime: number;
@@ -13,12 +13,18 @@ const usePomodoroTimer = ({ workTime, breakTime, onModeChange }: usePomodoroTime
   const [isActive, setIsActive] = useState(false);
   const [workedSeconds, setWorkedSeconds] = useState(0);
 
-  const countSecondsRef = useRef(0);
-  const intervalRef = useRef<number | null>(null);
-
   const prevWorkTimeRef = useRef(workTime);
   const prevBreakTimeRef = useRef(breakTime);
 
+  // refs aux
+  const isBreakRef = useRef(isBreak);
+  const switchingRef = useRef(false);
+
+  useEffect(() => {
+    isBreakRef.current = isBreak;
+  }, [isBreak]);
+
+  // if settings change and timer off restart timer
   useEffect(() => {
     if (!isActive) {
       if (prevWorkTimeRef.current !== workTime || prevBreakTimeRef.current !== breakTime) {
@@ -32,43 +38,45 @@ const usePomodoroTimer = ({ workTime, breakTime, onModeChange }: usePomodoroTime
   const switchMode = useCallback(() => {
     const alarm = new Audio(sound);
     alarm.volume = 0.07;
-    alarm.play().catch(() => { console.log('No se pudo reproducir el sonido'); });
+    alarm.play().catch(() => {
+      console.log('No se pudo reproducir el sonido');
+    });
 
     setIsBreak(prev => {
       const newIsBreak = !prev;
       onModeChange?.(newIsBreak);
       setTimeLeft(newIsBreak ? breakTime * 60 : workTime * 60);
+
+      switchingRef.current = false;
+
       return newIsBreak;
     });
   }, [workTime, breakTime, onModeChange]);
 
+  // interval control
   useEffect(() => {
-    if (!isActive) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      return;
-    }
+    if (!isActive) return;
 
-    intervalRef.current = window.setInterval(() => {
+    const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 0) {
-          switchMode();
-          return 0;
+          if (!switchingRef.current) {
+            switchingRef.current = true;
+            switchMode();
+            return isBreakRef.current ? workTime * 60 : breakTime * 60;
+          }
+          return prev;
         }
         return prev - 1;
       });
 
-      // Incrementar workedSeconds solo si no es break
-      setWorkedSeconds(prev => (!isBreak ? prev + 1 : prev));
+      // workedSeconds only in work
+      setWorkedSeconds(prev => (!isBreakRef.current ? prev + 1 : prev));
     }, 1000);
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isActive, switchMode, isBreak]);
 
+    return () => clearInterval(interval);
+  }, [isActive, switchMode]);
 
   const start = useCallback(() => {
     if (!isActive) {
@@ -86,16 +94,9 @@ const usePomodoroTimer = ({ workTime, breakTime, onModeChange }: usePomodoroTime
     stop();
     setIsBreak(false);
     setTimeLeft(workTime * 60);
-    countSecondsRef.current = 0;
     setWorkedSeconds(0);
     document.documentElement.style.backgroundColor = '#242424';
   }, [stop, workTime]);
-
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
 
   return {
     timeLeft,
