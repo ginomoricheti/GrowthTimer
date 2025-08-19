@@ -92,17 +92,33 @@ pub fn create_schema(conn: &Connection) -> Result<()> {
             (12, 'Exercise', '#EF4444'),
             (13, 'Cook', '#F59E0B'),
             (14, 'Organize', '#06B6D4');
-
-        INSERT OR IGNORE INTO projects (name, id_category, color) VALUES
-            ('Example Project', 1, '#FFFFFF');
-
-        INSERT OR IGNORE INTO goals (title, id_project, target_minutes) VALUES
-            ('Example Goal', 1, 1);
-
-        INSERT OR IGNORE INTO pomodoros (minutes, id_project, id_goal, id_task) VALUES
-            (25, 1, 1, 1);
     "#;
 
     conn.execute_batch(qry)?;
+
+    // Insert example project if there are no projects yet
+    let count: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM projects",
+        [],
+        |row| row.get(0),
+    )?;
+    if count == 0 {
+        conn.execute(
+            "INSERT INTO projects (name, id_category, color) VALUES (?1, ?2, ?3)",
+            ("Example Project", 1, "#FFFFFF"),
+        )?;
+
+        // insert goals and pomodoros
+        conn.execute(
+            "INSERT INTO goals (title, id_project, target_minutes) VALUES (?1, ?2, ?3)",
+            ("Example Goal", 1, 1),
+        )?;
+
+        conn.execute(
+            "INSERT INTO pomodoros (minutes, id_project, id_goal, id_task) VALUES (?1, ?2, ?3, ?4)",
+            (25, 1, 1, 1),
+        )?;
+    }
+
     Ok(())
 }
