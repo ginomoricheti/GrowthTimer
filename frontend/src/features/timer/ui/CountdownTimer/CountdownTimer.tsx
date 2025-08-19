@@ -107,10 +107,10 @@ const CountdownTimer = ({ categories, tasks, projects, pomodoros }: CountdownTim
       });
       toast.success('Pomodoro saved correctly.');
       
-      // Acumular el tiempo trabajado de esta sesión
-      setSessionStartSeconds(prev => prev + sessionWorkedSeconds);
+      // Reiniciar acumulado
       resetTimer();
-      
+      setSessionStartSeconds(0);
+
     } catch (error) {
       console.error('Error making pomodoro:', error);
       toast.error('Error saving pomodoro');
