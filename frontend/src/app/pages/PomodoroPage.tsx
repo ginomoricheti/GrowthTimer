@@ -1,24 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CountdownTimer from "../../features/timer/ui/CountdownTimer/CountdownTimer";
 import styles from "./PomodoroPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import Card from "@/features/slider/ui/Card/Card";
 import { Graphs } from "@/features/graphs/Graphs";
-import useGetAllData from "@/shared/hooks/useGetAllData";
 import CustomSidebar from "@/features/sidebar/ui/CustomSidebar/CustomSidebar";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
+import { useProjects } from "@/shared/context/ProjectsContext";
+import { useCategories } from "@/shared/context/CategoriesContext";
+import { useTasks } from "@/shared/context/TasksContext";
+import { usePomodoros } from "@/shared/context/PomodorosContext";
+import { useReports } from "@/shared/context/ReportsContext";
+
 const PomodoroPage = () => {
   const [showSecondPage, setShowSecondPage] = useState(false);
-  const { data, fetchAllData } = useGetAllData();
 
-  useEffect(() => {
-    fetchAllData();
-  }, []);
+  const { projects } = useProjects();
+  const { categories } = useCategories();
+  const { tasks } = useTasks();
+  const { pomodoros } = usePomodoros();
+  const { summary } = useReports();
 
-  console.log(data.pomodoros)
-  
   return (
     <div className={styles.viewport}>
       <div
@@ -31,10 +35,10 @@ const PomodoroPage = () => {
         {/* First view (Pomodoro) */}
         <div className={styles.page}>
           <CountdownTimer
-            categories = {data.categories}
-            tasks = {data.tasks}
-            projects = {data.projects}
-            pomodoros = {data.pomodoros}
+            categories = {categories}
+            tasks = {tasks}
+            projects = {projects}
+            pomodoros = {pomodoros}
           />
           <button onClick={() => setShowSecondPage(true)} className={`${styles.navButton} ${styles.rightButton}`}>
             <FontAwesomeIcon icon={faAnglesRight as unknown as IconProp} />
@@ -44,12 +48,12 @@ const PomodoroPage = () => {
         {/* Second view (Resume) */}
         <div className={styles.page}>
           <div className={styles.projectsSection}>
-            {data.projects.map((el) => (
-              <div className={styles.item} key={el.id}><Card data={el} /></div>
+            {projects.map((el) => (
+              <div className={styles.item} key={el.id}><Card projectId={Number(el.id)} /></div>
             ))}
           </div>
           <div className={styles.chartsSection}> 
-            <Graphs data={data.summary}/>
+            <Graphs data={summary}/>
           </div>
           <button onClick={() => setShowSecondPage(false)} className={`${styles.navButton} ${styles.leftButton}`}>
             <FontAwesomeIcon icon={faAnglesLeft as unknown as IconProp} />

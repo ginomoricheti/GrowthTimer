@@ -1,17 +1,19 @@
-import { ProjectGet } from "@/shared/types";
+import { useProjects } from "@/shared/context/ProjectsContext";
 import styles from './Card.module.css';
 
 type CardProps = {
-  data: ProjectGet;
+  projectId: number;
 };
 
-const Card = ({ data }: CardProps) => {
+const Card = ({ projectId }: CardProps) => {
+  const { projects } = useProjects();
+
+  const data = projects.find(p => p.id === projectId);
   if (!data) return null;
 
   const hours = Math.floor(data.totalTimeMinutes / 60);
   const minutes = data.totalTimeMinutes % 60;
 
-  // Search the first incomplete goal
   const currentGoal = data.goals?.find(goal => !goal.isCompleted);
 
   let goalInfo = null;

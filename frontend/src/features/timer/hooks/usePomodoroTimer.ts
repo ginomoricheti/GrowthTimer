@@ -15,10 +15,10 @@ const usePomodoroTimer = ({ workTime, breakTime, onModeChange }: usePomodoroTime
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive && timeLeft === 0) {
       setTimeLeft(isBreak ? breakTime : workTime);
     }
-  }, [workTime, breakTime, isBreak, isActive]);
+  }, [workTime, breakTime, isBreak, isActive, timeLeft]);
 
   const switchMode = useCallback(() => {
     setIsBreak(prev => {

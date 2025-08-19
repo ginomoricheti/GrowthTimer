@@ -2,8 +2,8 @@
 import { useState } from "react";
 import styles from "./SidebarMenuItem.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CreateGoalPopup from "../CreateGoalPopup/CreateGoalPopup";
-import CreateProjectPopup from "../CreateProjectPopup/CreateProjectPopup";
+import CreateGoalPopup from "./CreateGoalPopup/CreateGoalPopup";
+import CreateProjectPopup from "./CreateProjectPopup/CreateProjectPopup";
 
 
 interface SubItem {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
@@ -12,7 +12,7 @@ type OptionType = {
 type SelectorCreatableProps<T> = {
   label: string;
   items: T[];
-  defaultId?: number;
+  valueId?: number;
   onChange: (selectedId: number, createdLabel?: string) => void;
   mapItem?: (item: T) => OptionType;
   creatable?: boolean;
@@ -22,27 +22,46 @@ type SelectorCreatableProps<T> = {
 function SelectorCreatable<T>({
   label,
   items,
-  defaultId,
+  valueId,
   onChange,
   mapItem,
   creatable = true,
   isDisabled = false,
 }: SelectorCreatableProps<T>) {
-  const options: OptionType[] = items.map(item =>
-    mapItem
-      ? mapItem(item)
-      : { value: (item as any).id, label: (item as any).name, color: (item as any).color }
+  const options: OptionType[] = useMemo(
+    () =>
+      items.map(item =>
+        mapItem
+          ? mapItem(item)
+          : { value: (item as any).id, label: (item as any).name, color: (item as any).color }
+      ),
+    [items, mapItem]
   );
 
-  const [selectedOption, setSelectedOption] = useState<OptionType | null>(() => {
-    const found = options.find((opt) => opt.value === defaultId);
-    return found || null;
-  });
+  const [selectedOption, setSelectedOption] = useState<OptionType | null>(
+    () => options.find(opt => opt.value === valueId) || null
+  );
 
   useEffect(() => {
-    const found = options.find((opt) => opt.value === defaultId);
-    setSelectedOption(found || null);
-  }, [defaultId, items]);
+    const newOptions = items.map(item =>
+      mapItem
+        ? mapItem(item)
+        : { value: (item as any).id, label: (item as any).name, color: (item as any).color }
+    );
+
+    const found = newOptions.find(opt => opt.value === valueId) || null;
+    setSelectedOption(found);
+  }, [items, valueId, mapItem]);
+
+  useEffect(() => {
+    if (selectedOption) {
+      const exists = options.find(opt => opt.value === selectedOption.value);
+      if (!exists) {
+        setSelectedOption(null);
+        onChange(0);
+      }
+    }
+  }, [options, selectedOption, onChange]);
 
   const handleChange = (newValue: any, actionMeta: any) => {
     if (!newValue) {
@@ -64,7 +83,7 @@ function SelectorCreatable<T>({
     control: (styles: any) => ({ ...styles, backgroundColor: '#1f1f1f', color: 'white' }),
     singleValue: (styles: any) => ({ ...styles, color: 'white' }),
     menu: (styles: any) => ({ ...styles, backgroundColor: '#2e2e2e', zIndex: 9999 }),
-    menuPortal: (styles: any) => ({ ...styles, zIndex: 9999 }), // <--- importante
+    menuPortal: (styles: any) => ({ ...styles, zIndex: 9999 }),
     option: (styles: any, { isFocused }: any) => ({
       ...styles,
       backgroundColor: isFocused ? '#3a3a3a' : '#2e2e2e',
