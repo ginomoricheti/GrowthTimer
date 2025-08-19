@@ -7,8 +7,28 @@ import { CategoriesProvider } from '@/shared/context/CategoriesContext';
 import { TasksProvider } from '@/shared/context/TasksContext';
 import { PomodorosProvider } from '@/shared/context/PomodorosContext';
 import { ReportsProvider } from '@/shared/context/ReportsContext';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      if (e.key === 'F11') {
+        e.preventDefault();
+        try {
+          const appWindow = getCurrentWindow();
+          const isFullscreen = await appWindow.isFullscreen();
+          await appWindow.setFullscreen(!isFullscreen);
+        } catch (error) {
+          console.error('Error al cambiar modo pantalla completa:', error);
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <PrimeReactProvider value={{ ripple: true, inputStyle: 'outlined' }}>
@@ -28,6 +48,7 @@ function App() {
                     pauseOnFocusLoss 
                     draggable 
                     pauseOnHover 
+                    theme='colored'
                   />
                 </ReportsProvider>
               </PomodorosProvider>
@@ -35,7 +56,7 @@ function App() {
           </CategoriesProvider>
       </ProjectsProvider>
     </PrimeReactProvider>
-      )
+  );
 }
 
 export default App

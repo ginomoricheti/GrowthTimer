@@ -127,6 +127,7 @@ button:focus-visible {
 }
 
 ::-webkit-scrollbar {
+  width: 6px;
   height: 4px;
   background: transparent;
 }
